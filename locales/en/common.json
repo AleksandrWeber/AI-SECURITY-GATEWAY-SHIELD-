@@ -1,0 +1,96 @@
+{
+  "app": {
+    "name": "SHIELD",
+    "tagline": "AI Security Gateway"
+  },
+  "nav": {
+    "playground": "Playground",
+    "status": "System status"
+  },
+  "playground": {
+    "promptLabel": "Prompt to analyze",
+    "promptPlaceholder": "Enter a prompt to analyze for security risks...",
+    "analyze": "Analyze",
+    "analyzing": "Analyzing...",
+    "demoAttacks": "Demo attacks",
+    "errorAnalysisFailed": "Analysis failed"
+  },
+  "result": {
+    "severity": "Severity",
+    "confidence": "Confidence",
+    "action": "Action",
+    "matchedRules": "Matched rules",
+    "dangerousFragments": "Dangerous fragments",
+    "explanation": "Explanation",
+    "educationalNote": "Educational note",
+    "recommendation": "Recommendation",
+    "safeAlternative": "Safe alternative",
+    "copySafeAlternative": "Copy safe alternative",
+    "copied": "Copied!",
+    "processingMeta": "{{ms}}ms · {{stage}}{{ai}}",
+    "reportFalsePositive": "Report false positive",
+    "falsePositiveSent": "Report submitted — thank you",
+    "toggleFavorite": "Save to favorites",
+    "removeFavorite": "Remove favorite"
+  },
+  "risk": {
+    "SAFE": "Safe",
+    "SUSPICIOUS": "Suspicious",
+    "MALICIOUS": "Malicious"
+  },
+  "severity": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High"
+  },
+  "action": {
+    "ALLOW": "Allow",
+    "REVIEW": "Review",
+    "BLOCK": "Block",
+    "SANITIZE": "Sanitize"
+  },
+  "language": {
+    "en": "English",
+    "uk": "Українська"
+  },
+  "history": {
+    "title": "Recent analyses",
+    "favoritesTitle": "Saved reports",
+    "empty": "No analyses yet. Run your first scan above.",
+    "favoritesEmpty": "No saved reports yet.",
+    "chars": "chars"
+  },
+  "metrics": {
+    "requests": "Requests",
+    "cacheHit": "Cache hit",
+    "aiUsage": "AI usage",
+    "errors": "Errors"
+  },
+  "status": {
+    "title": "System status",
+    "loading": "Loading status…",
+    "overall": "Overall",
+    "version": "Version",
+    "uptime": "Uptime",
+    "database": "Database",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "rules": "Rules engine",
+    "rulesLoaded": "rules loaded",
+    "aiProvider": "AI provider",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "demoMode": "Demo mode",
+    "privacyMode": "Privacy mode",
+    "on": "On",
+    "off": "Off",
+    "metrics": "Runtime metrics",
+    "feedback": "Feedback",
+    "falsePositives": "False positive reports",
+    "state": {
+      "ok": "Operational",
+      "degraded": "Degraded",
+      "error": "Error"
+    }
+  }
+}

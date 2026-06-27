@@ -1,0 +1,152 @@
+# SHIELD — AI Security Gateway
+
+Analyze prompts for security risks before they reach LLMs.
+
+## Prerequisites
+
+Node.js **20+** is required. This repo uses **pnpm** (see `packageManager` in `package.json`).
+
+If `pnpm: command not found`, pick **one** option:
+
+**A) No global install (simplest, no sudo)**
+
+```bash
+npx pnpm@9.15.0 install
+npx pnpm@9.15.0 build
+```
+
+**B) Corepack (needs write access to `/usr/local/bin`)**
+
+```bash
+sudo corepack enable
+corepack prepare pnpm@9.15.0 --activate
+pnpm -v
+```
+
+If you see `EACCES: permission denied` without `sudo`, use option A or C.
+
+**C) npm global in your home directory (no sudo)**
+
+```bash
+mkdir -p ~/.npm-global
+npm config set prefix "$HOME/.npm-global"
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+npm install -g pnpm@9.15.0
+pnpm -v
+```
+
+## Quick start (local)
+
+```bash
+# From project root
+cd "/Users/oleksandrsvacko/Desktop/AI SECURITY GATEWAY (SHIELD)"
+
+# Install dependencies
+pnpm install
+
+# Copy environment
+cp .env.example .env
+
+# Build all packages
+pnpm build
+
+# Run backend + frontend (two terminals)
+pnpm --filter @shield/backend dev
+pnpm --filter @shield/frontend dev
+```
+
+- Frontend: http://localhost:5173
+- API: http://localhost:3001
+- Health: http://localhost:3001/health
+- Metrics: http://localhost:3001/api/v1/metrics
+- History: http://localhost:3001/api/v1/history
+
+## Docker (optional)
+
+Docker is **not required** for local development. Use `pnpm dev` in two terminals (see Quick start).
+
+For containerized deploy, install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/), start it, then verify:
+
+```bash
+docker -v
+docker compose version
+```
+
+```bash
+pnpm build   # or: npx pnpm@9.15.0 build
+docker compose up --build
+```
+
+- Playground: http://localhost:5173
+- API (direct): http://localhost:3001
+- Database: **PostgreSQL 16** (service `postgres`, credentials `shield`/`shield`)
+
+Data persists in the `postgres-data` Docker volume.
+
+### Local PostgreSQL (optional)
+
+```bash
+docker run --name shield-pg -e POSTGRES_USER=shield -e POSTGRES_PASSWORD=shield \
+  -e POSTGRES_DB=shield -p 5432:5432 -d postgres:16-alpine
+```
+
+Set `DATABASE_URL=postgresql://shield:shield@localhost:5432/shield` in `.env`.
+
+### Database commands
+
+```bash
+pnpm --filter @shield/backend db:migrate       # SQLite migrations
+pnpm --filter @shield/backend db:migrate:pg    # PostgreSQL migrations
+pnpm --filter @shield/backend db:seed          # idempotent settings seed
+```
+
+Local dev defaults to **SQLite** (`file:./data/shield.db`) — no Postgres required.
+
+## Tests
+
+```bash
+pnpm test              # unit + integration (Vitest, SQLite)
+pnpm test:e2e          # Playwright E2E smoke tests
+pnpm benchmark         # rule-engine p50/p95 perf check
+```
+
+Optional PostgreSQL smoke test (requires running Postgres):
+
+```bash
+TEST_DATABASE_URL=postgresql://shield:shield@localhost:5432/shield pnpm --filter @shield/backend test
+```
+
+## Monorepo structure
+
+```text
+apps/frontend     React playground
+apps/backend      Express API
+packages/types    Shared TypeScript types
+packages/rule-engine   Pure analysis core
+packages/ai-core       AI providers + cache
+rules/            Active detection rules
+attacks/          Demo + OWASP test payloads
+docs/             ADRs and API docs
+```
+
+## Development phases
+
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V1.5 complete**.
+
+## API endpoints (V1.5)
+
+| Endpoint | Auth | Description |
+|----------|------|-------------|
+| `GET /api/v1/status` | — | System status dashboard data |
+| `GET /api/v1/metrics` | — | Runtime metrics |
+| `GET /api/v1/history` | — | Recent analyses |
+| `GET /api/v1/favorites` | API key* | Saved reports |
+| `POST /api/v1/favorites/:id` | API key* | Save report |
+| `POST /api/v1/feedback` | API key* | False positive report |
+
+\* Required when `API_KEYS` is set. See `.env.example`.
+
+## License
+
+Copyright (c) 2026 Oleksandr Shvachko. See [LICENSE](./LICENSE).

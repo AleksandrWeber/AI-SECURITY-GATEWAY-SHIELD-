@@ -1,0 +1,30 @@
+{
+  "name": "shield-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SHIELD — AI Security Gateway for prompt analysis",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "pnpm build && playwright test",
+    "benchmark": "pnpm --filter @shield/backend benchmark",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@playwright/test": "^1.51.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0",
+    "vitest": "^3.0.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

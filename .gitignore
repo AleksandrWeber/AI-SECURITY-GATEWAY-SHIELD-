@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+dist-ssr
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Data
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage
+test-results/
+playwright-report/
+apps/backend/.test-data/
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Turbo
+.turbo
+.pnpm-store/
+
+# Old scaffold (removed)
+shield/
+
+# Playwright artifacts
+test-results/

@@ -1,0 +1,96 @@
+{
+  "app": {
+    "name": "SHIELD",
+    "tagline": "Шлюз безпеки ШІ"
+  },
+  "nav": {
+    "playground": "Playground",
+    "status": "Статус системи"
+  },
+  "playground": {
+    "promptLabel": "Промпт для аналізу",
+    "promptPlaceholder": "Введіть промпт для перевірки на ризики безпеки...",
+    "analyze": "Аналізувати",
+    "analyzing": "Аналіз...",
+    "demoAttacks": "Демо атаки",
+    "errorAnalysisFailed": "Помилка аналізу"
+  },
+  "result": {
+    "severity": "Серйозність",
+    "confidence": "Впевненість",
+    "action": "Дія",
+    "matchedRules": "Спрацювали правила",
+    "dangerousFragments": "Небезпечні фрагменти",
+    "explanation": "Пояснення",
+    "educationalNote": "Навчальна нотатка",
+    "recommendation": "Рекомендація",
+    "safeAlternative": "Безпечна альтернатива",
+    "copySafeAlternative": "Копіювати безпечну альтернативу",
+    "copied": "Скопійовано!",
+    "processingMeta": "{{ms}}мс · {{stage}}{{ai}}",
+    "reportFalsePositive": "Повідомити про хибне спрацювання",
+    "falsePositiveSent": "Звіт надіслано — дякуємо",
+    "toggleFavorite": "Зберегти звіт",
+    "removeFavorite": "Прибрати з обраного"
+  },
+  "risk": {
+    "SAFE": "Безпечно",
+    "SUSPICIOUS": "Підозріло",
+    "MALICIOUS": "Шкідливо"
+  },
+  "severity": {
+    "LOW": "Низька",
+    "MEDIUM": "Середня",
+    "HIGH": "Висока"
+  },
+  "action": {
+    "ALLOW": "Дозволити",
+    "REVIEW": "Перевірити",
+    "BLOCK": "Заблокувати",
+    "SANITIZE": "Санітизувати"
+  },
+  "language": {
+    "en": "English",
+    "uk": "Українська"
+  },
+  "history": {
+    "title": "Останні аналізи",
+    "favoritesTitle": "Збережені звіти",
+    "empty": "Ще немає аналізів. Запустіть перевірку вище.",
+    "favoritesEmpty": "Ще немає збережених звітів.",
+    "chars": "симв."
+  },
+  "metrics": {
+    "requests": "Запити",
+    "cacheHit": "Кеш",
+    "aiUsage": "AI",
+    "errors": "Помилки"
+  },
+  "status": {
+    "title": "Статус системи",
+    "loading": "Завантаження статусу…",
+    "overall": "Загальний стан",
+    "version": "Версія",
+    "uptime": "Час роботи",
+    "database": "База даних",
+    "connected": "Підключено",
+    "disconnected": "Відключено",
+    "rules": "Rule engine",
+    "rulesLoaded": "правил завантажено",
+    "aiProvider": "AI провайдер",
+    "available": "Доступний",
+    "unavailable": "Недоступний",
+    "demoMode": "Demo mode",
+    "privacyMode": "Privacy mode",
+    "on": "Увімк.",
+    "off": "Вимк.",
+    "metrics": "Метрики",
+    "feedback": "Зворотний зв'язок",
+    "falsePositives": "Звіти про хибні спрацювання",
+    "state": {
+      "ok": "Працює",
+      "degraded": "Обмежено",
+      "error": "Помилка"
+    }
+  }
+}
