@@ -59,3 +59,24 @@ export const feedback = pgTable('feedback', {
   riskAtReport: text('risk_at_report').notNull(),
   createdAt: text('created_at').notNull(),
 });
+
+export const webhookSubscriptions = pgTable('webhook_subscriptions', {
+  id: text('id').primaryKey(),
+  url: text('url').notNull(),
+  secret: text('secret').notNull(),
+  eventsJson: text('events_json').notNull().default('["analysis.completed"]'),
+  enabled: boolean('enabled').notNull().default(true),
+  createdAt: text('created_at').notNull(),
+});
+
+export const webhookDeliveries = pgTable('webhook_deliveries', {
+  id: serial('id').primaryKey(),
+  subscriptionId: text('subscription_id').notNull(),
+  event: text('event').notNull(),
+  analysisId: text('analysis_id').notNull(),
+  status: text('status').notNull(),
+  attempts: integer('attempts').notNull().default(0),
+  lastError: text('last_error'),
+  createdAt: text('created_at').notNull(),
+  deliveredAt: text('delivered_at'),
+});

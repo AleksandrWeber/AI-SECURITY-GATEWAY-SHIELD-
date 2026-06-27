@@ -13,8 +13,10 @@ import { healthRouter } from './routes/health.js';
 import { historyRouter } from './routes/history.js';
 import { metricsRouter } from './routes/metrics.js';
 import { createStatusRouter } from './routes/status.js';
+import { webhooksRouter } from './routes/webhooks.js';
 import { resetAnalysisCaches } from './services/analyze.js';
 import { resetMetrics } from './services/metrics.js';
+import { initWebhooksFromEnv } from './services/webhooks.js';
 
 export interface CreateAppOptions {
   env?: EnvConfig;
@@ -24,6 +26,8 @@ export interface CreateAppOptions {
 }
 
 function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express {
+  initWebhooksFromEnv(appEnv);
+
   const app = express();
   const apiKey = createApiKeyMiddleware(appEnv);
 
@@ -47,6 +51,7 @@ function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express 
     : rateLimitFromEnv(limitConfig);
 
   app.use('/api/v1/analyze', apiKey, analyzeMiddleware, createAnalyzeRouter(appEnv));
+  app.use('/api/v1', apiKey, webhooksRouter);
   app.use('/api/v1', apiKey, favoritesRouter);
   app.use('/api/v1', apiKey, feedbackRouter);
 

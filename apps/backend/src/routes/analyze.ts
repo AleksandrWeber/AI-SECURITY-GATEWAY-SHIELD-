@@ -3,11 +3,12 @@ import type { EnvConfig } from '../config.js';
 import { analyzeRequestSchema, batchAnalyzeRequestSchema } from '../schemas/analyze.js';
 import { runAnalysis } from '../services/analyze.js';
 import { runBatchAnalysis } from '../services/batch.js';
+import { dispatchAnalysisWebhooks } from '../services/webhooks.js';
 import { detectPromptLanguage, resolveReportLanguage } from '../utils/language.js';
 
 type AnalyzeEnv = Pick<
   EnvConfig,
-  'maxPromptLength' | 'batchMaxItems' | 'batchConcurrency'
+  'maxPromptLength' | 'batchMaxItems' | 'batchConcurrency' | 'webhooksEnabled'
 >;
 
 export function createAnalyzeRouter(env: AnalyzeEnv) {
@@ -35,6 +36,10 @@ export function createAnalyzeRouter(env: AnalyzeEnv) {
         ip: req.ip,
         userAgent: req.header('user-agent'),
       });
+
+      if (env.webhooksEnabled) {
+        void dispatchAnalysisWebhooks(result, parsed.prompt);
+      }
 
       res.json(result);
     } catch (err) {
@@ -70,6 +75,15 @@ export function createAnalyzeRouter(env: AnalyzeEnv) {
         resolveLanguage: resolveReportLanguage,
         detectLanguage: detectPromptLanguage,
       });
+
+      if (env.webhooksEnabled) {
+        for (const entry of response.results) {
+          if (entry.ok && entry.result) {
+            const prompt = parsed.items[entry.index]?.prompt ?? '';
+            void dispatchAnalysisWebhooks(entry.result, prompt);
+          }
+        }
+      }
 
       res.json(response);
     } catch (err) {

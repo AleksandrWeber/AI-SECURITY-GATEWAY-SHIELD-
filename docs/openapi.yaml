@@ -135,6 +135,87 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/webhooks:
+    get:
+      summary: List webhook subscriptions
+      tags: [Webhooks]
+      description: Returns subscriptions without secrets.
+      responses:
+        '200':
+          description: Subscription list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookListResponse'
+    post:
+      summary: Create webhook subscription
+      tags: [Webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookRequest'
+      responses:
+        '201':
+          description: Created subscription (includes secret once)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '400':
+          description: Validation error or subscription limit reached
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/webhooks/{id}:
+    patch:
+      summary: Enable or disable a webhook subscription
+      tags: [Webhooks]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookRequest'
+      responses:
+        '200':
+          description: Updated
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete webhook subscription
+      tags: [Webhooks]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Deleted
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/history:
     get:
       summary: Recent analysis reports (metadata only)
@@ -414,3 +495,107 @@ components:
               type: number
         uptimeSeconds:
           type: integer
+
+    WebhookEvent:
+      type: string
+      enum: [analysis.completed, analysis.blocked]
+
+    CreateWebhookRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          maxLength: 2048
+        secret:
+          type: string
+          minLength: 16
+          maxLength: 256
+          description: HMAC secret; auto-generated if omitted
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+          minItems: 1
+
+    UpdateWebhookRequest:
+      type: object
+      required: [enabled]
+      properties:
+        enabled:
+          type: boolean
+
+    WebhookSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+        enabled:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        secret:
+          type: string
+          description: Returned only on create
+
+    WebhookListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookSubscription'
+        total:
+          type: integer
+
+    WebhookPayload:
+      type: object
+      description: |
+        POST body sent to subscriber URLs. Signed with HMAC-SHA256 in
+        `X-SHIELD-Signature: sha256=<hex>` using `timestamp.body`.
+      properties:
+        event:
+          $ref: '#/components/schemas/WebhookEvent'
+        timestamp:
+          type: string
+          format: date-time
+        analysisId:
+          type: string
+          format: uuid
+        promptHash:
+          type: string
+        promptLength:
+          type: integer
+        result:
+          type: object
+          properties:
+            risk:
+              type: string
+              enum: [SAFE, SUSPICIOUS, MALICIOUS]
+            severity:
+              type: string
+              enum: [LOW, MEDIUM, HIGH]
+            confidence:
+              type: integer
+            action:
+              type: string
+              enum: [ALLOW, REVIEW, BLOCK, SANITIZE]
+            categories:
+              type: array
+              items:
+                type: string
+            aiInvoked:
+              type: boolean
+            pipelineStage:
+              type: string
+              enum: [exact, regex, ai, cache]

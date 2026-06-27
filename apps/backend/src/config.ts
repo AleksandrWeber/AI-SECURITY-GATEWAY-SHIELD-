@@ -23,6 +23,10 @@ export interface EnvConfig {
   apiKeyRequired: boolean;
   batchMaxItems: number;
   batchConcurrency: number;
+  webhooksEnabled: boolean;
+  webhookMaxRetries: number;
+  webhookTimeoutMs: number;
+  webhookMaxSubscriptions: number;
 }
 
 function parseApiKeys(raw: string | undefined): string[] {
@@ -60,6 +64,10 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     apiKeyRequired,
     batchMaxItems: Number(process.env.BATCH_MAX_ITEMS ?? 50),
     batchConcurrency: Number(process.env.BATCH_CONCURRENCY ?? 5),
+    webhooksEnabled: process.env.WEBHOOKS_ENABLED !== 'false',
+    webhookMaxRetries: Number(process.env.WEBHOOK_MAX_RETRIES ?? 3),
+    webhookTimeoutMs: Number(process.env.WEBHOOK_TIMEOUT_MS ?? 5000),
+    webhookMaxSubscriptions: Number(process.env.WEBHOOK_MAX_SUBSCRIPTIONS ?? 20),
     ...overrides,
   };
 }

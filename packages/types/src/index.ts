@@ -229,3 +229,32 @@ export interface FeedbackRecord {
   riskAtReport: string;
   createdAt: string;
 }
+
+export type WebhookEvent = 'analysis.completed' | 'analysis.blocked';
+
+export interface WebhookSubscription {
+  id: string;
+  url: string;
+  events: WebhookEvent[];
+  enabled: boolean;
+  createdAt: string;
+  /** Present only when the subscription is first created */
+  secret?: string;
+}
+
+export interface WebhookPayload {
+  event: WebhookEvent;
+  timestamp: string;
+  analysisId: string;
+  promptHash: string;
+  promptLength: number;
+  result: {
+    risk: Risk;
+    severity: Severity;
+    confidence: number;
+    action: Action;
+    categories: DetectionCategory[];
+    aiInvoked: boolean;
+    pipelineStage: PipelineStage;
+  };
+}

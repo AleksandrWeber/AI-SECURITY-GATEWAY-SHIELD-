@@ -130,9 +130,17 @@ See MASTER_PROMPT.md roadmap section.
 - [x] 32 new rules (8 per category, en + uk)
 - [x] Golden dataset + OWASP suite coverage
 
-### V2.4+ (pending)
+### V2.4 — Webhooks ✅
 
-- [ ] Webhooks
+- [x] `POST/GET/PATCH/DELETE /api/v1/webhooks`
+- [x] HMAC-SHA256 signing (`X-SHIELD-Signature`)
+- [x] Retry with exponential backoff
+- [x] Fire-and-forget dispatch on analyze + batch
+- [x] Privacy-safe payload (hash only, no plaintext prompt)
+- [x] OpenAPI + integration tests
+
+### V2.5+ (pending)
+
 - [ ] AI rule suggestions
 - [ ] CLI
 - [ ] PDF export + analytics

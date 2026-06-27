@@ -59,3 +59,24 @@ export const feedback = sqliteTable('feedback', {
   riskAtReport: text('risk_at_report').notNull(),
   createdAt: text('created_at').notNull(),
 });
+
+export const webhookSubscriptions = sqliteTable('webhook_subscriptions', {
+  id: text('id').primaryKey(),
+  url: text('url').notNull(),
+  secret: text('secret').notNull(),
+  eventsJson: text('events_json').notNull().default('["analysis.completed"]'),
+  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+  createdAt: text('created_at').notNull(),
+});
+
+export const webhookDeliveries = sqliteTable('webhook_deliveries', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  subscriptionId: text('subscription_id').notNull(),
+  event: text('event').notNull(),
+  analysisId: text('analysis_id').notNull(),
+  status: text('status').notNull(),
+  attempts: integer('attempts').notNull().default(0),
+  lastError: text('last_error'),
+  createdAt: text('created_at').notNull(),
+  deliveredAt: text('delivered_at'),
+});

@@ -15,6 +15,13 @@
       "when": 1782550000000,
       "tag": "0001_v15_favorites_feedback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782600000000,
+      "tag": "0002_webhooks",
+      "breakpoints": true
     }
   ]
 }
