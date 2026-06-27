@@ -216,6 +216,133 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/knowledge/pending:
+    get:
+      summary: List rule suggestions by review status
+      tags: [Knowledge]
+      description: |
+        Returns AI or manual rule suggestions awaiting human review.
+        Approved/rejected items live under `knowledge/approved` and `knowledge/rejected`.
+        **Suggestions are never applied to `/rules` automatically.**
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, rejected]
+            default: pending
+      responses:
+        '200':
+          description: Suggestion list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSuggestionListResponse'
+        '503':
+          description: Suggestions disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/knowledge/pending/suggest:
+    post:
+      summary: Request a manual rule suggestion
+      tags: [Knowledge]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuggestRuleRequest'
+      responses:
+        '201':
+          description: Created suggestion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSuggestion'
+        '409':
+          description: Duplicate pending suggestion for prompt hash
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/knowledge/pending/{id}:
+    get:
+      summary: Get a rule suggestion by id
+      tags: [Knowledge]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Suggestion details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSuggestion'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/knowledge/pending/{id}/approve:
+    post:
+      summary: Approve a pending suggestion
+      tags: [Knowledge]
+      description: Moves the file to `knowledge/approved/`. Does not modify `/rules`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSuggestionRequest'
+      responses:
+        '200':
+          description: Approved suggestion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSuggestion'
+
+  /api/v1/knowledge/pending/{id}/reject:
+    post:
+      summary: Reject a pending suggestion
+      tags: [Knowledge]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSuggestionRequest'
+      responses:
+        '200':
+          description: Rejected suggestion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleSuggestion'
+
   /api/v1/history:
     get:
       summary: Recent analysis reports (metadata only)
@@ -599,3 +726,71 @@ components:
             pipelineStage:
               type: string
               enum: [exact, regex, ai, cache]
+
+    SuggestRuleRequest:
+      type: object
+      required: [prompt]
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 32000
+        language:
+          type: string
+          enum: [en, uk]
+        analysisId:
+          type: string
+          format: uuid
+
+    ReviewSuggestionRequest:
+      type: object
+      properties:
+        note:
+          type: string
+          maxLength: 1000
+
+    RuleSuggestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        source:
+          type: string
+          enum: [ai-auto, manual]
+        analysisId:
+          type: string
+          format: uuid
+        promptHash:
+          type: string
+        promptLength:
+          type: integer
+        suggestedRule:
+          type: object
+          description: Proposed rule (always `enabled: false` until human merges into `/rules`)
+        rationale:
+          $ref: '#/components/schemas/LocalizedText'
+        createdAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type: string
+          format: date-time
+        reviewNote:
+          type: string
+
+    RuleSuggestionListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleSuggestion'
+        total:
+          type: integer
+        status:
+          type: string
+          enum: [pending, approved, rejected]

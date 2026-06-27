@@ -258,3 +258,21 @@ export interface WebhookPayload {
     pipelineStage: PipelineStage;
   };
 }
+
+export type RuleSuggestionStatus = 'pending' | 'approved' | 'rejected';
+
+export type RuleSuggestionSource = 'ai-auto' | 'manual';
+
+export interface RuleSuggestion {
+  id: string;
+  status: RuleSuggestionStatus;
+  source: RuleSuggestionSource;
+  analysisId?: string;
+  promptHash: string;
+  promptLength: number;
+  suggestedRule: Rule;
+  rationale: LocalizedText;
+  createdAt: string;
+  reviewedAt?: string;
+  reviewNote?: string;
+}

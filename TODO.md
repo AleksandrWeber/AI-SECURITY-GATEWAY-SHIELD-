@@ -139,8 +139,15 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Privacy-safe payload (hash only, no plaintext prompt)
 - [x] OpenAPI + integration tests
 
-### V2.5+ (pending)
+### V2.5 — AI rule suggestions ✅
 
-- [ ] AI rule suggestions
+- [x] Mock AI proposes rules when analysis finds gaps (no rule match + AI invoked)
+- [x] Suggestions stored in `knowledge/pending/` (never auto-applied to `/rules`)
+- [x] `GET/POST /api/v1/knowledge/pending` + approve/reject review flow
+- [x] Privacy-safe storage (prompt hash only)
+- [x] OpenAPI + integration tests
+
+### V2.6+ (pending)
+
 - [ ] CLI
 - [ ] PDF export + analytics

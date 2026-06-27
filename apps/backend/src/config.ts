@@ -27,6 +27,10 @@ export interface EnvConfig {
   webhookMaxRetries: number;
   webhookTimeoutMs: number;
   webhookMaxSubscriptions: number;
+  knowledgeDir: string;
+  ruleSuggestionsEnabled: boolean;
+  autoSuggestRules: boolean;
+  maxPendingSuggestions: number;
 }
 
 function parseApiKeys(raw: string | undefined): string[] {
@@ -68,6 +72,10 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     webhookMaxRetries: Number(process.env.WEBHOOK_MAX_RETRIES ?? 3),
     webhookTimeoutMs: Number(process.env.WEBHOOK_TIMEOUT_MS ?? 5000),
     webhookMaxSubscriptions: Number(process.env.WEBHOOK_MAX_SUBSCRIPTIONS ?? 20),
+    knowledgeDir: process.env.KNOWLEDGE_DIR ?? resolve(process.cwd(), '../../knowledge'),
+    ruleSuggestionsEnabled: process.env.RULE_SUGGESTIONS_ENABLED !== 'false',
+    autoSuggestRules: process.env.AUTO_SUGGEST_RULES !== 'false',
+    maxPendingSuggestions: Number(process.env.MAX_PENDING_SUGGESTIONS ?? 100),
     ...overrides,
   };
 }

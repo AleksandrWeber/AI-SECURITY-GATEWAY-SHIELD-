@@ -14,6 +14,15 @@ export {
 } from './explanation.js';
 export { mergeAnalysisResults, enrichRuleOnlyResult } from './merge.js';
 export { parseAIAnalysisResponse, AIParseError, aiPartialSchema } from './parser.js';
+export {
+  buildMockRuleSuggestion,
+  buildSuggestionFromPrompt,
+  shouldSuggestRule,
+  nextRuleId,
+  CATEGORY_PREFIX,
+  type RuleSuggestionDraft,
+  type RuleSuggestionInput,
+} from './suggestRule.js';
 
 export interface AIDecisionInput {
   matchedRulesCount: number;

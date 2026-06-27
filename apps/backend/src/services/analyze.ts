@@ -5,15 +5,16 @@ import {
   MockAIProvider,
   shouldInvokeAI,
 } from '@shield/ai-core';
-import { analyzePrompt, loadRulesFromDirectory, normalizePrompt } from '@shield/rule-engine';
-import type { AnalysisResult, DetectedLanguage, Rule, SupportedLanguage } from '@shield/types';
+import { analyzePrompt, normalizePrompt } from '@shield/rule-engine';
+import type { AnalysisResult, DetectedLanguage, SupportedLanguage } from '@shield/types';
 import { env } from '../config.js';
 import { DbAICache } from '../db/ai-cache.js';
+import { suggestRuleFromAnalysis } from './knowledge.js';
+import { getRules, reloadRules, resetRulesCache } from './rules.js';
 import { type AuditContext, persistAnalysis, writeAuditLog } from './storage.js';
 import { recordAnalysisError, recordAnalysisSuccess } from './metrics.js';
 
 const mockProvider = new MockAIProvider();
-let rulesCache: Rule[] | null = null;
 let aiCache: DbAICache | null = null;
 
 function getAiCache(): DbAICache {
@@ -21,13 +22,6 @@ function getAiCache(): DbAICache {
     aiCache = new DbAICache(mockProvider.name);
   }
   return aiCache;
-}
-
-async function getRules(): Promise<Rule[]> {
-  if (!rulesCache) {
-    rulesCache = await loadRulesFromDirectory(env.rulesDir);
-  }
-  return rulesCache;
 }
 
 function withLanguageFields(
@@ -97,6 +91,10 @@ export async function runAnalysis(
       result,
     });
 
+    if (env.ruleSuggestionsEnabled && env.autoSuggestRules) {
+      void suggestRuleFromAnalysis(result, prompt, language);
+    }
+
     recordAnalysisSuccess({
       processingTimeMs: result.processingTimeMs,
       needsAi,
@@ -116,11 +114,9 @@ export async function runAnalysis(
   }
 }
 
-export function reloadRules(): void {
-  rulesCache = null;
-}
+export { reloadRules };
 
 export function resetAnalysisCaches(): void {
-  rulesCache = null;
+  resetRulesCache();
   aiCache = null;
 }
