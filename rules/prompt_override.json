@@ -1,0 +1,105 @@
+{
+  "version": "1.0.0",
+  "category": "prompt_override",
+  "rules": [
+    {
+      "id": "po-001",
+      "name": "Ignore previous instructions",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ignore previous instructions",
+      "confidenceBoost": 45,
+      "enabled": true,
+      "source": "owasp-llm01",
+      "educationalNote": {
+        "en": "Attempts to override the model's original instructions.",
+        "uk": "Спроба переписати оригінальні інструкції моделі."
+      }
+    },
+    {
+      "id": "po-002",
+      "name": "Ignore all instructions",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ignore all previous instructions",
+      "confidenceBoost": 45,
+      "enabled": true,
+      "source": "owasp-llm01"
+    },
+    {
+      "id": "po-003",
+      "name": "Disregard prior rules (UK)",
+      "category": "prompt_override",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ігноруй попередні інструкції",
+      "confidenceBoost": 45,
+      "enabled": true,
+      "educationalNote": {
+        "en": "Ukrainian prompt override attempt.",
+        "uk": "Спроба переписати інструкції українською."
+      }
+    },
+    {
+      "id": "po-004",
+      "name": "Disregard prior instructions",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "disregard all prior instructions",
+      "confidenceBoost": 42,
+      "enabled": true,
+      "source": "owasp-llm01"
+    },
+    {
+      "id": "po-005",
+      "name": "Override system instructions",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "override system instructions",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "po-006",
+      "name": "Forget everything above",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "forget everything above",
+      "confidenceBoost": 35,
+      "enabled": true
+    },
+    {
+      "id": "po-007",
+      "name": "Forget prior rules (UK)",
+      "category": "prompt_override",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "забудь попередні правила",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "po-008",
+      "name": "New instructions priority",
+      "category": "prompt_override",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "regex",
+      "pattern": "new instructions take priority",
+      "confidenceBoost": 38,
+      "enabled": true
+    }
+  ]
+}
