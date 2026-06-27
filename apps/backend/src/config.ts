@@ -21,6 +21,8 @@ export interface EnvConfig {
   databaseUrl: string;
   apiKeys: string[];
   apiKeyRequired: boolean;
+  batchMaxItems: number;
+  batchConcurrency: number;
 }
 
 function parseApiKeys(raw: string | undefined): string[] {
@@ -56,6 +58,8 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     databaseUrl,
     apiKeys,
     apiKeyRequired,
+    batchMaxItems: Number(process.env.BATCH_MAX_ITEMS ?? 50),
+    batchConcurrency: Number(process.env.BATCH_CONCURRENCY ?? 5),
     ...overrides,
   };
 }

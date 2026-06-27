@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import type { EnvConfig } from '../config.js';
-import { analyzeRequestSchema } from '../schemas/analyze.js';
+import { analyzeRequestSchema, batchAnalyzeRequestSchema } from '../schemas/analyze.js';
 import { runAnalysis } from '../services/analyze.js';
+import { runBatchAnalysis } from '../services/batch.js';
 import { detectPromptLanguage, resolveReportLanguage } from '../utils/language.js';
 
-export function createAnalyzeRouter(env: Pick<EnvConfig, 'maxPromptLength'>) {
+type AnalyzeEnv = Pick<
+  EnvConfig,
+  'maxPromptLength' | 'batchMaxItems' | 'batchConcurrency'
+>;
+
+export function createAnalyzeRouter(env: AnalyzeEnv) {
   const analyzeRouter = Router();
 
   analyzeRouter.post('/', async (req, res, next) => {
@@ -31,6 +37,41 @@ export function createAnalyzeRouter(env: Pick<EnvConfig, 'maxPromptLength'>) {
       });
 
       res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  analyzeRouter.post('/batch', async (req, res, next) => {
+    try {
+      const parsed = batchAnalyzeRequestSchema.parse(req.body);
+
+      if (parsed.items.length > env.batchMaxItems) {
+        res.status(400).json({
+          error: 'BATCH_TOO_LARGE',
+          message: `Batch exceeds maximum of ${env.batchMaxItems} items`,
+        });
+        return;
+      }
+
+      const acceptLanguage = req.header('accept-language');
+      const response = await runBatchAnalysis({
+        items: parsed.items,
+        defaults: { mode: parsed.mode, language: parsed.language },
+        acceptLanguage,
+        audit: {
+          method: req.method,
+          path: req.path,
+          ip: req.ip,
+          userAgent: req.header('user-agent'),
+        },
+        concurrency: env.batchConcurrency,
+        maxPromptLength: env.maxPromptLength,
+        resolveLanguage: resolveReportLanguage,
+        detectLanguage: detectPromptLanguage,
+      });
+
+      res.json(response);
     } catch (err) {
       next(err);
     }

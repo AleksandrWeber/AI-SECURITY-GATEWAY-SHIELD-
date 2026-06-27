@@ -100,6 +100,46 @@ export interface AnalyzeRequest {
   language?: SupportedLanguage;
 }
 
+export interface BatchAnalyzeItem {
+  /** Optional client correlation id */
+  id?: string;
+  prompt: string;
+  mode?: AnalyzeMode;
+  language?: SupportedLanguage;
+}
+
+export interface BatchAnalyzeRequest {
+  items: BatchAnalyzeItem[];
+  mode?: AnalyzeMode;
+  language?: SupportedLanguage;
+}
+
+export type BatchAnalyzeResultEntry =
+  | {
+      index: number;
+      id?: string;
+      ok: true;
+      result: AnalysisResult;
+    }
+  | {
+      index: number;
+      id?: string;
+      ok: false;
+      error: { code: string; message: string };
+    };
+
+export interface BatchAnalyzeResponse {
+  batchId: string;
+  timestamp: string;
+  results: BatchAnalyzeResultEntry[];
+  summary: {
+    total: number;
+    succeeded: number;
+    failed: number;
+    processingTimeMs: number;
+  };
+}
+
 export interface AIAnalysisInput {
   prompt: string;
   normalizedPrompt: string;

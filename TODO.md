@@ -118,9 +118,14 @@ See MASTER_PROMPT.md roadmap section.
 - [x] ADR 004, README, `.env.example`
 - [x] Optional PG smoke test (`TEST_DATABASE_URL`)
 
-### V2.2+ (pending)
+### V2.2 — Batch analyze ✅
 
-- [ ] Batch analyze
+- [x] `POST /api/v1/analyze/batch` (up to 50 prompts, concurrency limit)
+- [x] Per-item errors without failing whole batch
+- [x] OpenAPI + integration tests
+
+### V2.3+ (pending)
+
 - [ ] V2 detection categories
 - [ ] Webhooks
 - [ ] AI rule suggestions
