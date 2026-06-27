@@ -1,0 +1,61 @@
+import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
+
+export const analyses = pgTable('analyses', {
+  id: text('id').primaryKey(),
+  promptHash: text('prompt_hash').notNull(),
+  promptLength: integer('prompt_length').notNull(),
+  risk: text('risk').notNull(),
+  severity: text('severity').notNull(),
+  confidence: integer('confidence').notNull(),
+  action: text('action').notNull(),
+  rulesVersion: text('rules_version').notNull(),
+  aiInvoked: boolean('ai_invoked').notNull().default(false),
+  pipelineStage: text('pipeline_stage').notNull(),
+  categoriesJson: text('categories_json').notNull().default('[]'),
+  matchedRulesJson: text('matched_rules_json').notNull().default('[]'),
+  resultJson: text('result_json').notNull(),
+  createdAt: text('created_at').notNull(),
+});
+
+export const auditLogs = pgTable('audit_logs', {
+  id: serial('id').primaryKey(),
+  timestamp: text('timestamp').notNull(),
+  method: text('method'),
+  path: text('path'),
+  ip: text('ip'),
+  userAgent: text('user_agent'),
+  promptHash: text('prompt_hash'),
+  promptLength: integer('prompt_length'),
+  rulesTriggered: text('rules_triggered'),
+  aiInvoked: boolean('ai_invoked'),
+  resultSummary: text('result_summary'),
+  exception: text('exception'),
+});
+
+export const settings = pgTable('settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
+export const aiCache = pgTable('ai_cache', {
+  cacheKey: text('cache_key').primaryKey(),
+  resultJson: text('result_json').notNull(),
+  model: text('model').notNull(),
+  rulesVersion: text('rules_version').notNull(),
+  createdAt: text('created_at').notNull(),
+});
+
+export const favorites = pgTable('favorites', {
+  analysisId: text('analysis_id').primaryKey(),
+  createdAt: text('created_at').notNull(),
+});
+
+export const feedback = pgTable('feedback', {
+  id: serial('id').primaryKey(),
+  analysisId: text('analysis_id').notNull(),
+  type: text('type').notNull(),
+  note: text('note'),
+  riskAtReport: text('risk_at_report').notNull(),
+  createdAt: text('created_at').notNull(),
+});

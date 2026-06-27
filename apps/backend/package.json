@@ -1,0 +1,46 @@
+{
+  "name": "@shield/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "db:generate": "drizzle-kit generate",
+    "db:generate:pg": "drizzle-kit generate --config drizzle.pg.config.ts",
+    "db:migrate": "drizzle-kit migrate",
+    "db:migrate:pg": "drizzle-kit migrate --config drizzle.pg.config.ts",
+    "db:seed": "tsx scripts/db-seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "benchmark": "tsx scripts/benchmark.ts"
+  },
+  "dependencies": {
+    "@shield/ai-core": "workspace:*",
+    "@shield/rule-engine": "workspace:*",
+    "@shield/types": "workspace:*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "express-rate-limit": "^7.5.0",
+    "@libsql/client": "^0.14.0",
+    "drizzle-orm": "^0.39.3",
+    "postgres": "^3.4.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "drizzle-kit": "^0.30.4",
+    "vitest": "^3.0.4"
+  }
+}

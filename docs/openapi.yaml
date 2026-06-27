@@ -1,0 +1,283 @@
+openapi: 3.1.0
+info:
+  title: SHIELD API
+  version: 0.2.0
+  description: |
+    AI Security Gateway — analyze prompts for security risks before they reach LLMs.
+
+    Report language resolution order:
+    1. `language` in request body
+    2. `Accept-Language` header
+    3. Auto-detection from prompt text
+    4. Default `en`
+
+servers:
+  - url: http://localhost:3001
+    description: Local development
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [System]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /ready:
+    get:
+      summary: Readiness probe
+      tags: [System]
+      responses:
+        '200':
+          description: Service is ready
+
+  /live:
+    get:
+      summary: Liveness probe
+      tags: [System]
+      responses:
+        '200':
+          description: Service is live
+
+  /api/v1/openapi.yaml:
+    get:
+      summary: OpenAPI specification
+      tags: [System]
+      responses:
+        '200':
+          description: YAML OpenAPI document
+          content:
+            text/yaml:
+              schema:
+                type: string
+
+  /api/v1/analyze:
+    post:
+      summary: Analyze a prompt for security risks
+      tags: [Analysis]
+      parameters:
+        - name: Accept-Language
+          in: header
+          required: false
+          schema:
+            type: string
+          example: uk, en;q=0.9
+          description: Preferred report language (en or uk)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+      responses:
+        '200':
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResult'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/history:
+    get:
+      summary: Recent analysis reports (metadata only)
+      tags: [Analysis]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated history list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryResponse'
+
+  /api/v1/metrics:
+    get:
+      summary: Runtime metrics snapshot
+      tags: [System]
+      responses:
+        '200':
+          description: Metrics (p50/p95, cache hit, AI usage, errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsSnapshot'
+
+components:
+  schemas:
+    AnalyzeRequest:
+      type: object
+      required: [prompt]
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          maxLength: 32000
+          description: Text to analyze
+        mode:
+          type: string
+          enum: [quick, detailed]
+          default: quick
+        language:
+          type: string
+          enum: [en, uk]
+          description: Report language override
+
+    LocalizedText:
+      type: object
+      properties:
+        en:
+          type: string
+        uk:
+          type: string
+
+    AnalysisResult:
+      type: object
+      properties:
+        analysisId:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        rulesVersion:
+          type: string
+        risk:
+          type: string
+          enum: [SAFE, SUSPICIOUS, MALICIOUS]
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        confidence:
+          type: integer
+          minimum: 0
+          maximum: 100
+        action:
+          type: string
+          enum: [ALLOW, REVIEW, BLOCK, SANITIZE]
+        language:
+          type: string
+          enum: [en, uk]
+        detectedLanguage:
+          type: string
+          enum: [en, uk, mixed]
+        explanation:
+          $ref: '#/components/schemas/LocalizedText'
+        educationalNote:
+          $ref: '#/components/schemas/LocalizedText'
+        recommendation:
+          $ref: '#/components/schemas/LocalizedText'
+        safeAlternative:
+          $ref: '#/components/schemas/LocalizedText'
+        aiInvoked:
+          type: boolean
+        pipelineStage:
+          type: string
+          enum: [exact, regex, ai, cache]
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          format: date-time
+        version:
+          type: string
+        uptime:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+
+    HistoryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisHistoryItem'
+        total:
+          type: integer
+
+    AnalysisHistoryItem:
+      type: object
+      properties:
+        id:
+          type: string
+        risk:
+          type: string
+          enum: [SAFE, SUSPICIOUS, MALICIOUS]
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        confidence:
+          type: integer
+        action:
+          type: string
+          enum: [ALLOW, REVIEW, BLOCK, SANITIZE]
+        promptLength:
+          type: integer
+        aiInvoked:
+          type: boolean
+        pipelineStage:
+          type: string
+          enum: [exact, regex, ai, cache]
+        createdAt:
+          type: string
+          format: date-time
+
+    MetricsSnapshot:
+      type: object
+      properties:
+        totalRequests:
+          type: integer
+        errorCount:
+          type: integer
+        errorRate:
+          type: number
+        aiUsageRate:
+          type: number
+        cacheHitRate:
+          type: number
+        latencyMs:
+          type: object
+          properties:
+            p50:
+              type: number
+            p95:
+              type: number
+            p99:
+              type: number
+        uptimeSeconds:
+          type: integer
