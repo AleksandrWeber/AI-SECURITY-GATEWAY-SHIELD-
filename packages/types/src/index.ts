@@ -18,7 +18,11 @@ export type DetectionCategory =
   | 'extraction'
   | 'data_exfiltration'
   | 'tool_abuse'
-  | 'pii_exposure';
+  | 'pii_exposure'
+  | 'indirect_injection'
+  | 'rag_poisoning'
+  | 'role_confusion'
+  | 'context_manipulation';
 
 export type PipelineStage = 'exact' | 'regex' | 'ai' | 'cache';
 

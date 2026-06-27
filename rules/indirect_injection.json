@@ -1,0 +1,99 @@
+{
+  "version": "1.0.0",
+  "category": "indirect_injection",
+  "rules": [
+    {
+      "id": "ii-001",
+      "name": "Ignore document context",
+      "category": "indirect_injection",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ignore the above document and",
+      "confidenceBoost": 42,
+      "enabled": true,
+      "source": "owasp",
+      "educationalNote": {
+        "en": "Indirect injection hides commands inside documents the model is asked to summarize.",
+        "uk": "Непряма ін'єкція ховає команди всередині документів, які модель має підсумувати."
+      }
+    },
+    {
+      "id": "ii-002",
+      "name": "Hidden instruction in attachment",
+      "category": "indirect_injection",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "hidden instruction in the attached",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ii-003",
+      "name": "Embedded prompt injection",
+      "category": "indirect_injection",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "embedded prompt injection",
+      "confidenceBoost": 44,
+      "enabled": true
+    },
+    {
+      "id": "ii-004",
+      "name": "Metadata instruction injection",
+      "category": "indirect_injection",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "instructions hidden in metadata",
+      "confidenceBoost": 38,
+      "enabled": true
+    },
+    {
+      "id": "ii-005",
+      "name": "Disregard retrieved text",
+      "category": "indirect_injection",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "disregard previous context from the user message",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ii-006",
+      "name": "Ignore document text (UK)",
+      "category": "indirect_injection",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ігноруй попередній текст документа",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "ii-007",
+      "name": "Hidden attachment instruction (UK)",
+      "category": "indirect_injection",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "прихована інструкція у вкладенні",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ii-008",
+      "name": "Embedded injection (UK)",
+      "category": "indirect_injection",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "вбудована ін'єкція промпта",
+      "confidenceBoost": 44,
+      "enabled": true
+    }
+  ]
+}

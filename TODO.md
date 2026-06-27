@@ -124,9 +124,14 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Per-item errors without failing whole batch
 - [x] OpenAPI + integration tests
 
-### V2.3+ (pending)
+### V2.3 — V2 detection categories ✅
 
-- [ ] V2 detection categories
+- [x] `indirect_injection`, `rag_poisoning`, `role_confusion`, `context_manipulation`
+- [x] 32 new rules (8 per category, en + uk)
+- [x] Golden dataset + OWASP suite coverage
+
+### V2.4+ (pending)
+
 - [ ] Webhooks
 - [ ] AI rule suggestions
 - [ ] CLI

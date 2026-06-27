@@ -97,7 +97,7 @@ describe('ruleFileSchema', () => {
 describe('loadRulesFromDirectory', () => {
   it('loads and validates all production rule files', async () => {
     const rules = await loadRulesFromDirectory(rulesDir);
-    expect(rules).toHaveLength(48);
+    expect(rules).toHaveLength(80);
     expect(rules.every((r) => r.id && r.pattern)).toBe(true);
   });
 });

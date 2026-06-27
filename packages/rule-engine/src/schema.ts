@@ -8,6 +8,10 @@ const detectionCategorySchema = z.enum([
   'data_exfiltration',
   'tool_abuse',
   'pii_exposure',
+  'indirect_injection',
+  'rag_poisoning',
+  'role_confusion',
+  'context_manipulation',
 ]);
 
 const severitySchema = z.enum(['LOW', 'MEDIUM', 'HIGH']);

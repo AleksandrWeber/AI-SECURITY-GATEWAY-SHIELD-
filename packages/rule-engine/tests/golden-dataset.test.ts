@@ -33,8 +33,8 @@ describe('golden dataset', () => {
     entries = dataset.prompts;
   });
 
-  it('contains exactly 100 prompts in expected groups', () => {
-    expect(entries).toHaveLength(100);
+  it('contains 116 prompts in expected groups (V2 categories included)', () => {
+    expect(entries).toHaveLength(116);
     const groups = entries.reduce(
       (acc, p) => {
         acc[p.group] = (acc[p.group] ?? 0) + 1;
@@ -42,12 +42,12 @@ describe('golden dataset', () => {
       },
       {} as Record<string, number>,
     );
-    expect(groups.malicious).toBe(40);
+    expect(groups.malicious).toBe(56);
     expect(groups.suspicious).toBe(20);
     expect(groups.safe).toBe(40);
   });
 
-  it('evaluates all 100 golden prompts correctly', () => {
+  it('evaluates all golden prompts correctly', () => {
     const failures: string[] = [];
 
     for (const entry of entries) {
