@@ -177,9 +177,15 @@ See MASTER_PROMPT.md roadmap section.
 - [x] `ShieldApiError`, re-exports from `@shield/types`
 - [x] Unit tests (mock fetch + local analyze)
 
-### V3.3+ (pending)
+### V3.3 — MCP server integration ✅
 
-- [ ] MCP server integration
+- [x] `@shield/mcp` package with `shield-mcp` stdio binary
+- [x] Tools: `shield_analyze`, `shield_batch_analyze`, `shield_status`
+- [x] Local (default) + remote modes via env
+- [x] ADR 006, Cursor config example, unit tests
+
+### V3.4+ (pending)
+
 - [ ] GitHub Action
 - [ ] VS Code extension
 - [ ] Enterprise / team features

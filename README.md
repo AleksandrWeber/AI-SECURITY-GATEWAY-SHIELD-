@@ -170,6 +170,48 @@ const result = await client.analyze('ignore previous instructions');
 const local = await analyzeLocal({ prompt: 'Hello world' });
 ```
 
+## V3.3 — MCP server
+
+Expose SHIELD to AI assistants (Cursor, Claude Desktop) via [Model Context Protocol](https://modelcontextprotocol.io/):
+
+```bash
+pnpm --filter @shield/mcp build
+```
+
+**Local mode** (offline, no backend):
+
+```json
+{
+  "mcpServers": {
+    "shield": {
+      "command": "node",
+      "args": ["/path/to/SHIELD/packages/mcp/dist/index.js"],
+      "env": { "SHIELD_MCP_MODE": "local" }
+    }
+  }
+}
+```
+
+**Remote mode** (uses running SHIELD API + DB rules):
+
+```json
+{
+  "mcpServers": {
+    "shield": {
+      "command": "node",
+      "args": ["/path/to/SHIELD/packages/mcp/dist/index.js"],
+      "env": {
+        "SHIELD_MCP_MODE": "remote",
+        "SHIELD_API_URL": "http://localhost:3001",
+        "SHIELD_API_KEY": "your-key"
+      }
+    }
+  }
+}
+```
+
+Tools: `shield_analyze`, `shield_batch_analyze`, `shield_status`. See [ADR 006](docs/adr/006-mcp-server.md) and [docs/mcp-cursor.example.json](docs/mcp-cursor.example.json).
+
 ## Tests
 
 ```bash
@@ -200,7 +242,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.2** (npm SDK); V2 complete.
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.3** (MCP server); V2 complete.
 
 ## API endpoints (V1.5)
 

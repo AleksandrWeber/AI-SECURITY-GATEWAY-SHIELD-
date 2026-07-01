@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "shield": {
+      "command": "node",
+      "args": ["packages/mcp/dist/index.js"],
+      "env": {
+        "SHIELD_MCP_MODE": "local"
+      }
+    }
+  }
+}
