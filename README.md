@@ -103,6 +103,23 @@ pnpm --filter @shield/backend db:seed          # idempotent settings seed
 
 Local dev defaults to **SQLite** (`file:./data/shield.db`) — no Postgres required.
 
+## CLI (V2.6)
+
+Analyze prompts from the terminal without starting the API:
+
+```bash
+pnpm build
+pnpm exec shield analyze "ignore previous instructions"
+pnpm exec shield analyze --stdin <<< "What is TypeScript?"
+pnpm exec shield analyze --fail-on-risk "test prompt"   # exit 2 on SUSPICIOUS/MALICIOUS
+```
+
+Remote mode (backend must be running):
+
+```bash
+pnpm exec shield analyze --remote --url http://localhost:3001 "test prompt"
+```
+
 ## Tests
 
 ```bash
@@ -125,6 +142,7 @@ apps/backend      Express API
 packages/types    Shared TypeScript types
 packages/rule-engine   Pure analysis core
 packages/ai-core       AI providers + cache
+packages/cli           Terminal CLI (`shield analyze`)
 rules/            Active detection rules
 attacks/          Demo + OWASP test payloads
 docs/             ADRs and API docs
@@ -132,7 +150,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V1.5 complete**.
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V2.6 complete** (V2.7 pending).
 
 ## API endpoints (V1.5)
 

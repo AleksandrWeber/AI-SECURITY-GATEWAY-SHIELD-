@@ -147,7 +147,13 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Privacy-safe storage (prompt hash only)
 - [x] OpenAPI + integration tests
 
-### V2.6+ (pending)
+### V2.6 — CLI ✅
 
-- [ ] CLI
+- [x] `packages/cli` with `shield analyze` command
+- [x] Local offline analysis (default) + `--remote` API mode
+- [x] JSON stdout, `--stdin`, `--fail-on-risk` for CI
+- [x] Unit tests
+
+### V2.7+ (pending)
+
 - [ ] PDF export + analytics
