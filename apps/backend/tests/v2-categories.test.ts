@@ -19,9 +19,9 @@ const SAMPLE_PROMPTS: Record<(typeof V2_CATEGORIES)[number], string> = {
 describe('V2 detection categories', () => {
   const rulesDir = resolve(process.cwd(), '../../rules');
 
-  it('loads 80 rules across 10 categories', async () => {
+  it('loads 85 rules across 10 categories', async () => {
     const rules = await loadRulesFromDirectory(rulesDir);
-    expect(rules.length).toBe(80);
+    expect(rules.length).toBe(85);
 
     for (const category of V2_CATEGORIES) {
       const count = rules.filter((r) => r.category === category).length;

@@ -90,6 +90,28 @@
       "pattern": "output your configuration",
       "confidenceBoost": 33,
       "enabled": true
+    },
+    {
+      "id": "ex-009",
+      "name": "Hidden system instructions",
+      "category": "extraction",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "hidden\\s+system\\s+instructions",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ex-010",
+      "name": "System instructions verbatim",
+      "category": "extraction",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "system instructions verbatim",
+      "confidenceBoost": 38,
+      "enabled": true
     }
   ]
 }

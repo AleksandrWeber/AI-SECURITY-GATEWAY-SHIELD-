@@ -43,8 +43,8 @@
       "category": "jailbreak",
       "language": ["en", "universal"],
       "severity": "HIGH",
-      "type": "contains",
-      "pattern": "developer mode enabled",
+      "type": "regex",
+      "pattern": "\\bdeveloper mode\\b",
       "confidenceBoost": 38,
       "enabled": true
     },
@@ -90,6 +90,39 @@
       "type": "contains",
       "pattern": "do anything now",
       "confidenceBoost": 32,
+      "enabled": true
+    },
+    {
+      "id": "jb-009",
+      "name": "No safety rules",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "no safety rules",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "jb-010",
+      "name": "Debug session bypass",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "as a debug session",
+      "confidenceBoost": 36,
+      "enabled": true
+    },
+    {
+      "id": "jb-011",
+      "name": "Disregard provider policies",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "disregard\\s+\\w+\\s+polic",
+      "confidenceBoost": 38,
       "enabled": true
     }
   ]

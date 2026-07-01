@@ -24,7 +24,9 @@ export class MockAIProvider implements AIProvider {
     }
 
     const suspicious =
-      /secret|password|api[_-]?key|token|credential|exploit|hack/i.test(input.normalizedPrompt);
+      /secret|password|api[_-]?key|token|credential|exploit|hack|jailbreak|developer mode|no safety rules|ignore (all )?(previous|prior) instructions|disregard\s+\w+\s+polic|hidden\s+system\s+instructions|system instructions verbatim|as a debug session|reveal your system prompt/i.test(
+        input.normalizedPrompt,
+      );
 
     if (!suspicious) {
       return {
