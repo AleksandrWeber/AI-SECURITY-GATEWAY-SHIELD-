@@ -197,6 +197,11 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Webview result panel, `shield.*` settings, bundled local rules
 - [x] esbuild bundle, unit tests, ADR 008
 
-### V3.6+ (pending)
+### V3.6 — Enterprise / teams ✅
 
-- [ ] Enterprise / team features
+- [x] `teams` + `team_api_keys` tables, `team_id` on analyses/audit
+- [x] `shld_…` team API keys (hashed storage)
+- [x] Admin routes (`TEAM_ADMIN_KEY`), team analytics, `/teams/me`
+- [x] ADR 009 + integration tests
+
+## V3 roadmap — complete ✅

@@ -8,6 +8,7 @@ export interface AuditContext {
   path?: string;
   ip?: string;
   userAgent?: string;
+  teamId?: string;
 }
 
 /** Strip prompt-derived content before persisting when privacy mode is on. */
@@ -38,6 +39,7 @@ export async function persistAnalysis(
   result: AnalysisResult,
   prompt: string,
   privacyMode: boolean,
+  teamId?: string,
 ): Promise<void> {
   const { promptHash, promptLength } = preparePromptForStorage(prompt, privacyMode);
   const safeResult = sanitizeResultForStorage(result, privacyMode);
@@ -50,6 +52,7 @@ export async function persistAnalysis(
   await useDb(async ({ db, schema }) => {
     await db.insert(schema.analyses).values({
       id: result.analysisId,
+      teamId: teamId ?? null,
       promptHash,
       promptLength,
       risk: result.risk,
@@ -79,6 +82,7 @@ export async function writeAuditLog(
 
   await useDb(async ({ db, schema }) => {
     await db.insert(schema.auditLogs).values({
+      teamId: params.teamId ?? null,
       timestamp: new Date().toISOString(),
       method: params.method,
       path: params.path,

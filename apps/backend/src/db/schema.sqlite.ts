@@ -2,6 +2,7 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const analyses = sqliteTable('analyses', {
   id: text('id').primaryKey(),
+  teamId: text('team_id'),
   promptHash: text('prompt_hash').notNull(),
   promptLength: integer('prompt_length').notNull(),
   risk: text('risk').notNull(),
@@ -19,6 +20,7 @@ export const analyses = sqliteTable('analyses', {
 
 export const auditLogs = sqliteTable('audit_logs', {
   id: integer('id').primaryKey({ autoIncrement: true }),
+  teamId: text('team_id'),
   timestamp: text('timestamp').notNull(),
   method: text('method'),
   path: text('path'),
@@ -90,4 +92,22 @@ export const rules = sqliteTable('rules', {
   enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
+});
+
+export const teams = sqliteTable('teams', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  createdAt: text('created_at').notNull(),
+});
+
+export const teamApiKeys = sqliteTable('team_api_keys', {
+  id: text('id').primaryKey(),
+  teamId: text('team_id').notNull(),
+  name: text('name').notNull(),
+  keyHash: text('key_hash').notNull().unique(),
+  keyPrefix: text('key_prefix').notNull(),
+  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+  createdAt: text('created_at').notNull(),
+  lastUsedAt: text('last_used_at'),
 });

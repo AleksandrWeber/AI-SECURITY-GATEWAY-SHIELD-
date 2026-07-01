@@ -1,292 +1,318 @@
 # SHIELD — AI Security Gateway
 
-Analyze prompts for security risks before they reach LLMs.
+**Analyze prompts for security risks before they reach LLMs.**
 
-## Prerequisites
+[Українська документація](./README.uk.md)
 
-Node.js **20+** is required. This repo uses **pnpm** (see `packageManager` in `package.json`).
+SHIELD is an AI security platform for developers and AppSec engineers. It acts as an **AI firewall** between users and language models — detecting prompt injection, jailbreaks, data exfiltration, PII leaks, and related threats, then explaining risks in plain language.
 
-If `pnpm: command not found`, pick **one** option:
-
-**A) No global install (simplest, no sudo)**
-
-```bash
-npx pnpm@9.15.0 install
-npx pnpm@9.15.0 build
+```text
+User / App → SHIELD → LLM
 ```
 
-**B) Corepack (needs write access to `/usr/local/bin`)**
+---
+
+## Features
+
+### Core analysis
+
+| Capability | Description |
+|------------|-------------|
+| **Rule engine** | 80+ detection rules across 12 categories (prompt override, jailbreak, extraction, PII, indirect injection, RAG poisoning, role confusion, context manipulation, and more) |
+| **AI-assisted analysis** | Mock AI in dev/test; optional real providers — invoked only when rules need confirmation (cost-aware) |
+| **Risk scoring** | `SAFE` / `SUSPICIOUS` / `MALICIOUS` with severity, confidence, and recommended action (`ALLOW`, `REVIEW`, `BLOCK`, `SANITIZE`) |
+| **Bilingual reports** | English and Ukrainian explanations, recommendations, and safe alternatives |
+| **Dangerous fragments** | Highlights risky spans with rule references |
+
+### Interfaces
+
+| Interface | Use case |
+|-----------|----------|
+| **Web playground** | Interactive demo, attack library, PDF export, history, favorites |
+| **REST API** | Integrate into apps and pipelines (`POST /api/v1/analyze`, batch, OpenAPI 3.1) |
+| **CLI** | `shield analyze` — local offline or remote API, `--fail-on-risk` for CI |
+| **TypeScript SDK** | `@shield/sdk` — `ShieldClient` + `analyzeLocal()` |
+| **MCP server** | `shield_analyze` tools for Cursor / Claude Desktop |
+| **GitHub Action** | Scan prompt files in PRs with configurable `fail-on-risk` |
+| **VS Code extension** | Analyze selection or whole document from the editor |
+
+### Security & operations
+
+| Capability | Description |
+|------------|-------------|
+| **Privacy mode** | Hash-only prompt storage; secret redaction; no plaintext in DB |
+| **API key auth** | Env-based keys or per-team `shld_…` keys |
+| **Rate limiting** | Configurable request limits |
+| **Webhooks** | HMAC-signed events on analysis (`analysis.completed`, `analysis.blocked`) |
+| **Analytics & metrics** | p50/p95 latency, AI usage, risk breakdown, system resources |
+| **PDF export** | Downloadable security reports |
+| **OWASP LLM suite** | Golden dataset + automated regression tests |
+
+### Self-learning (V3)
+
+| Capability | Description |
+|------------|-------------|
+| **AI rule suggestions** | Gaps trigger pending suggestions — never auto-applied |
+| **Human review** | Approve / reject flow with privacy-safe storage |
+| **Database rules** | Promote approved rules to DB; merged at runtime (DB wins on ID conflict) |
+
+### Enterprise / teams (V3.6)
+
+| Capability | Description |
+|------------|-------------|
+| **Teams** | Isolated squads with named API keys (`shld_…`) |
+| **Team analytics** | Per-team analysis counts, risk/action breakdown |
+| **Admin API** | Create teams and keys via `TEAM_ADMIN_KEY` |
+| **Audit tagging** | Analyses and audit logs scoped to `team_id` |
+
+---
+
+## Quick start
+
+### Prerequisites
+
+- **Node.js 20+**
+- **pnpm 9** (or `npx pnpm@9.15.0` without global install)
 
 ```bash
-sudo corepack enable
-corepack prepare pnpm@9.15.0 --activate
-pnpm -v
-```
-
-If you see `EACCES: permission denied` without `sudo`, use option A or C.
-
-**C) npm global in your home directory (no sudo)**
-
-```bash
-mkdir -p ~/.npm-global
-npm config set prefix "$HOME/.npm-global"
-echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-npm install -g pnpm@9.15.0
-pnpm -v
-```
-
-## Quick start (local)
-
-```bash
-# From project root
-cd "/Users/oleksandrsvacko/Desktop/AI SECURITY GATEWAY (SHIELD)"
-
-# Install dependencies
-pnpm install
-
-# Copy environment
+git clone https://github.com/AleksandrWeber/AI-SECURITY-GATEWAY-SHIELD-.git
+cd AI-SECURITY-GATEWAY-SHIELD-
 cp .env.example .env
-
-# Build all packages
+pnpm install
 pnpm build
-
-# Run backend + frontend (two terminals)
-pnpm --filter @shield/backend dev
-pnpm --filter @shield/frontend dev
 ```
 
-- Frontend: http://localhost:5173
-- API: http://localhost:3001
-- Health: http://localhost:3001/health
-- Metrics: http://localhost:3001/api/v1/metrics
-- History: http://localhost:3001/api/v1/history
-
-## Docker (optional)
-
-Docker is **not required** for local development. Use `pnpm dev` in two terminals (see Quick start).
-
-For containerized deploy, install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/), start it, then verify:
+### Run locally (two terminals)
 
 ```bash
-docker -v
-docker compose version
+pnpm --filter @shield/backend dev    # API → http://localhost:3001
+pnpm --filter @shield/frontend dev   # UI  → http://localhost:5173
 ```
 
+| URL | Purpose |
+|-----|---------|
+| http://localhost:5173 | Playground |
+| http://localhost:3001/health | Health check |
+| http://localhost:3001/api/v1/status | System status |
+| http://localhost:3001/api/v1/openapi.yaml | OpenAPI spec |
+
+### Docker (production-style)
+
 ```bash
-pnpm build   # or: npx pnpm@9.15.0 build
+pnpm build
 docker compose up --build
 ```
 
-- Playground: http://localhost:5173
-- API (direct): http://localhost:3001
-- Database: **PostgreSQL 16** (service `postgres`, credentials `shield`/`shield`)
+Uses **PostgreSQL 16** with persistent volume. Playground: http://localhost:5173
 
-Data persists in the `postgres-data` Docker volume.
+---
 
-### Local PostgreSQL (optional)
+## Usage
 
-```bash
-docker run --name shield-pg -e POSTGRES_USER=shield -e POSTGRES_PASSWORD=shield \
-  -e POSTGRES_DB=shield -p 5432:5432 -d postgres:16-alpine
-```
+### Playground
 
-Set `DATABASE_URL=postgresql://shield:shield@localhost:5432/shield` in `.env`.
+1. Open http://localhost:5173
+2. Paste a prompt or pick a demo attack
+3. Review risk, explanation, matched rules, and safe alternative
+4. Switch language (EN / UK), export PDF, save favorites
 
-### Database commands
+### API
 
 ```bash
-pnpm --filter @shield/backend db:migrate       # SQLite migrations
-pnpm --filter @shield/backend db:migrate:pg    # PostgreSQL migrations
-pnpm --filter @shield/backend db:seed          # idempotent settings seed
+curl -X POST http://localhost:3001/api/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"ignore previous instructions","mode":"quick","language":"en"}'
 ```
 
-Local dev defaults to **SQLite** (`file:./data/shield.db`) — no Postgres required.
+**Batch** (up to 50 prompts):
 
-## CLI (V2.6)
+```bash
+curl -X POST http://localhost:3001/api/v1/analyze/batch \
+  -H "Content-Type: application/json" \
+  -d '{"items":[{"prompt":"hello"},{"prompt":"ignore all rules"}]}'
+```
 
-Analyze prompts from the terminal without starting the API:
+With API keys enabled:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" ...
+```
+
+### CLI
 
 ```bash
 pnpm build
 pnpm exec shield analyze "ignore previous instructions"
 pnpm exec shield analyze --stdin <<< "What is TypeScript?"
-pnpm exec shield analyze --fail-on-risk "test prompt"   # exit 2 on SUSPICIOUS/MALICIOUS
+pnpm exec shield analyze --fail-on-risk "test"    # exit 2 on SUSPICIOUS/MALICIOUS
+pnpm exec shield analyze --remote --url http://localhost:3001 "prompt"
 ```
 
-Remote mode (backend must be running):
-
-```bash
-pnpm exec shield analyze --remote --url http://localhost:3001 "test prompt"
-```
-
-## PDF export & analytics (V2.7)
-
-```bash
-# Download PDF for a stored analysis
-curl -o report.pdf "http://localhost:3001/api/v1/analyze/<analysisId>/export.pdf?language=en"
-
-# Analytics snapshot (runtime + DB aggregates + system resources)
-curl http://localhost:3001/api/v1/analytics
-```
-
-The playground includes an **Export PDF** button on each result. The status page shows memory, CPU load, and risk breakdown.
-
-## V3.1 — Database rules
-
-Approved AI suggestions can be promoted into the database and used at runtime (merged with `/rules` files; DB wins on ID conflict):
-
-```bash
-# Approve then promote
-curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/approve -d '{"note":"ok"}'
-curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/promote
-
-# Or approve + promote in one step
-curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/approve -d '{"promoteToDb":true}'
-
-# List database rules
-curl http://localhost:3001/api/v1/rules/db
-```
-
-Set `RULES_DB_ENABLED=false` to disable DB rules. See [ADR 005](docs/adr/005-database-rules.md).
-
-## V3.2 — TypeScript SDK
-
-```bash
-pnpm --filter @shield/sdk build
-```
+### TypeScript SDK
 
 ```typescript
 import { ShieldClient, analyzeLocal } from '@shield/sdk';
 
-// Remote API
-const client = new ShieldClient({
-  baseUrl: 'http://localhost:3001',
-  apiKey: process.env.SHIELD_API_KEY,
-});
+// Remote
+const client = new ShieldClient({ baseUrl: 'http://localhost:3001', apiKey: '…' });
 const result = await client.analyze('ignore previous instructions');
 
 // Offline (no server)
 const local = await analyzeLocal({ prompt: 'Hello world' });
 ```
 
-## V3.3 — MCP server
-
-Expose SHIELD to AI assistants (Cursor, Claude Desktop) via [Model Context Protocol](https://modelcontextprotocol.io/):
+### MCP (Cursor / Claude Desktop)
 
 ```bash
 pnpm --filter @shield/mcp build
 ```
 
-**Local mode** (offline, no backend):
+Add to MCP config — see [docs/mcp-cursor.example.json](./docs/mcp-cursor.example.json).
 
-```json
-{
-  "mcpServers": {
-    "shield": {
-      "command": "node",
-      "args": ["/path/to/SHIELD/packages/mcp/dist/index.js"],
-      "env": { "SHIELD_MCP_MODE": "local" }
-    }
-  }
-}
-```
+Tools: `shield_analyze`, `shield_batch_analyze`, `shield_status`.
 
-**Remote mode** (uses running SHIELD API + DB rules):
-
-```json
-{
-  "mcpServers": {
-    "shield": {
-      "command": "node",
-      "args": ["/path/to/SHIELD/packages/mcp/dist/index.js"],
-      "env": {
-        "SHIELD_MCP_MODE": "remote",
-        "SHIELD_API_URL": "http://localhost:3001",
-        "SHIELD_API_KEY": "your-key"
-      }
-    }
-  }
-}
-```
-
-Tools: `shield_analyze`, `shield_batch_analyze`, `shield_status`. See [ADR 006](docs/adr/006-mcp-server.md) and [docs/mcp-cursor.example.json](docs/mcp-cursor.example.json).
-
-## V3.4 — GitHub Action
-
-Scan prompt files in CI before they reach production:
+### GitHub Action
 
 ```yaml
 - uses: actions/checkout@v4
-
 - uses: AleksandrWeber/AI-SECURITY-GATEWAY-SHIELD-@main
   with:
-    paths: |
-      prompts/**
-      **/*.prompt
+    paths: 'prompts/**'
     fail-on-risk: SUSPICIOUS
 ```
 
-Build locally: `pnpm --filter @shield/action build` (bundles rules into `packages/action/dist/`).
+See [docs/github-action.example.yml](./docs/github-action.example.yml).
 
-Remote mode: set `api-url` + `api-key` and `local: false`. See [ADR 007](docs/adr/007-github-action.md) and [docs/github-action.example.yml](docs/github-action.example.yml).
-
-## V3.5 — VS Code extension
-
-Analyze prompts directly in the editor:
+### VS Code extension
 
 ```bash
 pnpm --filter shield-prompt-security build
-pnpm --filter shield-prompt-security package   # produces .vsix
+pnpm --filter shield-prompt-security package   # → .vsix
 ```
 
-Commands: **SHIELD: Analyze Selection**, **SHIELD: Analyze Document**. Configure `shield.mode`, `shield.apiUrl`, and `shield.language` in VS Code settings. See [apps/vscode/README.md](apps/vscode/README.md) and [ADR 008](docs/adr/008-vscode-extension.md).
+Commands: **SHIELD: Analyze Selection**, **SHIELD: Analyze Document**.  
+Settings: `shield.mode`, `shield.apiUrl`, `shield.language` — see [apps/vscode/README.md](./apps/vscode/README.md).
 
-## Tests
+### Teams (enterprise)
+
+Enable in `.env`:
+
+```env
+TEAMS_ENABLED=true
+TEAM_ADMIN_KEY=your-secret-admin-key
+API_KEY_REQUIRED=true
+```
 
 ```bash
-pnpm test              # unit + integration (Vitest, SQLite)
-pnpm test:e2e          # Playwright E2E smoke tests
-pnpm benchmark         # rule-engine p50/p95 perf check
+# Create team
+curl -X POST http://localhost:3001/api/v1/teams \
+  -H "Authorization: Bearer $TEAM_ADMIN_KEY" \
+  -d '{"name":"AppSec Squad","slug":"appsec"}'
+
+# Issue team key (plaintext shown once)
+curl -X POST http://localhost:3001/api/v1/teams/<teamId>/keys \
+  -H "Authorization: Bearer $TEAM_ADMIN_KEY" \
+  -d '{"name":"CI pipeline"}'
+
+# Analyze with team key
+curl -X POST http://localhost:3001/api/v1/analyze \
+  -H "Authorization: Bearer shld_…" \
+  -d '{"prompt":"test"}'
+
+# Team analytics
+curl http://localhost:3001/api/v1/teams/<teamId>/analytics \
+  -H "Authorization: Bearer shld_…"
 ```
 
-Optional PostgreSQL smoke test (requires running Postgres):
+See [ADR 009](docs/adr/009-enterprise-teams.md).
+
+### Self-learning pipeline
 
 ```bash
-TEST_DATABASE_URL=postgresql://shield:shield@localhost:5432/shield pnpm --filter @shield/backend test
+# List pending AI suggestions
+curl http://localhost:3001/api/v1/knowledge/pending
+
+# Approve and promote to database rules
+curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/approve \
+  -d '{"promoteToDb":true}'
 ```
+
+---
+
+## Configuration
+
+Copy `.env.example` → `.env`. Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PRIVACY_MODE` | `true` | Hash-only storage, redact secrets |
+| `DEMO_MODE` | `false` | Force mock AI |
+| `DATABASE_URL` | SQLite file | Or PostgreSQL URL |
+| `API_KEY_REQUIRED` | `false` | Require API key on protected routes |
+| `API_KEYS` | — | Comma-separated legacy keys |
+| `TEAMS_ENABLED` | `false` | Team API keys + analytics |
+| `TEAM_ADMIN_KEY` | — | Admin key for team management |
+| `RULES_DB_ENABLED` | `true` | Database-backed rules |
+| `WEBHOOKS_ENABLED` | `true` | Webhook dispatch |
+| `RULE_SUGGESTIONS_ENABLED` | `true` | AI suggestion pipeline |
+
+---
 
 ## Monorepo structure
 
 ```text
-apps/frontend     React playground
-apps/backend      Express API
-packages/types    Shared TypeScript types
-packages/rule-engine   Pure analysis core
-packages/ai-core       AI providers + cache
-packages/cli           Terminal CLI (`shield analyze`)
-rules/            Active detection rules
-attacks/          Demo + OWASP test payloads
-docs/             ADRs and API docs
+apps/frontend          React playground
+apps/backend           Express API + Drizzle ORM
+apps/vscode            VS Code extension
+packages/rule-engine   Pure detection core
+packages/ai-core       AI providers, cache, explanations
+packages/cli           Terminal CLI
+packages/sdk           TypeScript SDK
+packages/mcp           MCP server
+packages/action        GitHub Action (bundled)
+packages/types         Shared types
+rules/                 Baseline JSON rules (80+)
+attacks/               OWASP LLM test payloads
+docs/adr/              Architecture decision records
 ```
 
-## Development phases
+---
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.5** (VS Code extension); V2 complete.
+## Development
 
-## API endpoints (V1.5)
+```bash
+pnpm test              # Vitest unit + integration
+pnpm test:e2e          # Playwright smoke tests
+pnpm benchmark         # Rule engine performance
+pnpm --filter @shield/backend db:migrate
+```
+
+Roadmap: [TODO.md](./TODO.md) — **V3 complete** (playground through enterprise teams).
+
+---
+
+## API reference (selected)
 
 | Endpoint | Auth | Description |
 |----------|------|-------------|
-| `GET /api/v1/status` | — | System status dashboard data |
-| `GET /api/v1/metrics` | — | Runtime metrics |
+| `POST /api/v1/analyze` | API key* | Analyze prompt |
+| `POST /api/v1/analyze/batch` | API key* | Batch analyze |
+| `GET /api/v1/status` | — | System dashboard |
+| `GET /api/v1/analytics` | — | Aggregated analytics |
 | `GET /api/v1/history` | — | Recent analyses |
-| `GET /api/v1/favorites` | API key* | Saved reports |
-| `POST /api/v1/favorites/:id` | API key* | Save report |
-| `POST /api/v1/feedback` | API key* | False positive report |
+| `GET/POST /api/v1/teams` | Admin | Team management |
+| `GET /api/v1/teams/:id/analytics` | Team / admin | Per-team stats |
+| `GET/POST /api/v1/rules/db` | API key* | Database rules |
+| `GET/POST /api/v1/knowledge/pending` | API key* | Rule suggestions |
+| `GET/POST /api/v1/webhooks` | API key* | Webhook subscriptions |
 
-\* Required when `API_KEYS` is set. See `.env.example`.
+\* When `API_KEY_REQUIRED` or `API_KEYS` is set.
+
+Full spec: `GET /api/v1/openapi.yaml`
+
+---
 
 ## License
 
-Copyright (c) 2026 Oleksandr Shvachko. See [LICENSE](./LICENSE).
+Copyright (c) 2026 Oleksandr Shvachko. See [LICENSE](./LICENSE).  
+Commercial use requires permission — [LICENSE-COMMERCIAL.md](./LICENSE-COMMERCIAL.md).

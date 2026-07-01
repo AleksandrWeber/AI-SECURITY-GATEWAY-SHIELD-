@@ -35,6 +35,7 @@ export function createAnalyzeRouter(env: AnalyzeEnv) {
         path: req.path,
         ip: req.ip,
         userAgent: req.header('user-agent'),
+        teamId: req.team?.id,
       });
 
       if (env.webhooksEnabled) {
@@ -69,6 +70,7 @@ export function createAnalyzeRouter(env: AnalyzeEnv) {
           path: req.path,
           ip: req.ip,
           userAgent: req.header('user-agent'),
+          teamId: req.team?.id,
         },
         concurrency: env.batchConcurrency,
         maxPromptLength: env.maxPromptLength,

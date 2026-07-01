@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express, { type Express } from 'express';
 import helmet from 'helmet';
+import './types/express.js';
 import { env, loadEnv, type EnvConfig } from './config.js';
 import { initDatabase, parseDatabaseUrl, resetDatabase } from './db/index.js';
 import { createApiKeyMiddleware } from './middleware/apiKey.js';
@@ -16,6 +17,7 @@ import { historyRouter } from './routes/history.js';
 import { metricsRouter } from './routes/metrics.js';
 import { createKnowledgeRouter } from './routes/knowledge.js';
 import { createRulesRouter, initDbRulesFromEnv } from './routes/rules.js';
+import { createTeamsRouter } from './routes/teams.js';
 import { createStatusRouter } from './routes/status.js';
 import { webhooksRouter } from './routes/webhooks.js';
 import { resetAnalysisCaches } from './services/analyze.js';
@@ -65,6 +67,7 @@ function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express 
   app.use('/api/v1', apiKey, webhooksRouter);
   app.use('/api/v1', apiKey, favoritesRouter);
   app.use('/api/v1', apiKey, feedbackRouter);
+  app.use('/api/v1', createTeamsRouter(appEnv));
 
   app.use(notFoundHandler);
   app.use(errorHandler);

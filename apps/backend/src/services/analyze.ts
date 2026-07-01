@@ -83,7 +83,7 @@ export async function runAnalysis(
       result = withLanguageFields(merged, language, detectedLanguage);
     }
 
-    await persistAnalysis(result, prompt, env.privacyMode);
+    await persistAnalysis(result, prompt, env.privacyMode, audit?.teamId);
     await writeAuditLog({
       ...audit,
       prompt,

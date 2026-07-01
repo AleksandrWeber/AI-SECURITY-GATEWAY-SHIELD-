@@ -2,6 +2,7 @@ import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 
 export const analyses = pgTable('analyses', {
   id: text('id').primaryKey(),
+  teamId: text('team_id'),
   promptHash: text('prompt_hash').notNull(),
   promptLength: integer('prompt_length').notNull(),
   risk: text('risk').notNull(),
@@ -19,6 +20,7 @@ export const analyses = pgTable('analyses', {
 
 export const auditLogs = pgTable('audit_logs', {
   id: serial('id').primaryKey(),
+  teamId: text('team_id'),
   timestamp: text('timestamp').notNull(),
   method: text('method'),
   path: text('path'),
@@ -90,4 +92,22 @@ export const rules = pgTable('rules', {
   enabled: boolean('enabled').notNull().default(true),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
+});
+
+export const teams = pgTable('teams', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  createdAt: text('created_at').notNull(),
+});
+
+export const teamApiKeys = pgTable('team_api_keys', {
+  id: text('id').primaryKey(),
+  teamId: text('team_id').notNull(),
+  name: text('name').notNull(),
+  keyHash: text('key_hash').notNull().unique(),
+  keyPrefix: text('key_prefix').notNull(),
+  enabled: boolean('enabled').notNull().default(true),
+  createdAt: text('created_at').notNull(),
+  lastUsedAt: text('last_used_at'),
 });

@@ -32,6 +32,8 @@ export interface EnvConfig {
   autoSuggestRules: boolean;
   maxPendingSuggestions: number;
   rulesDbEnabled: boolean;
+  teamsEnabled: boolean;
+  teamAdminKey: string;
 }
 
 function parseApiKeys(raw: string | undefined): string[] {
@@ -78,6 +80,8 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     autoSuggestRules: process.env.AUTO_SUGGEST_RULES !== 'false',
     maxPendingSuggestions: Number(process.env.MAX_PENDING_SUGGESTIONS ?? 100),
     rulesDbEnabled: process.env.RULES_DB_ENABLED !== 'false',
+    teamsEnabled: process.env.TEAMS_ENABLED === 'true',
+    teamAdminKey: process.env.TEAM_ADMIN_KEY?.trim() ?? '',
     ...overrides,
   };
 }

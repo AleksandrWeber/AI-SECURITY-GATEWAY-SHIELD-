@@ -314,3 +314,34 @@ export interface DbRuleRecord {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface TeamRecord {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+}
+
+export interface TeamApiKeyRecord {
+  id: string;
+  teamId: string;
+  name: string;
+  keyPrefix: string;
+  enabled: boolean;
+  createdAt: string;
+  lastUsedAt?: string;
+}
+
+export interface TeamApiKeyCreated extends TeamApiKeyRecord {
+  /** Plaintext key — returned only once at creation */
+  key: string;
+}
+
+export interface TeamAnalytics {
+  teamId: string;
+  teamName: string;
+  totalAnalyses: number;
+  byRisk: Record<Risk, number>;
+  byAction: Record<Action, number>;
+  lastAnalysisAt?: string;
+}
