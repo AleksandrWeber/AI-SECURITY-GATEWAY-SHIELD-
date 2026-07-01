@@ -1,8 +1,12 @@
 import { config } from 'dotenv';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-config({ path: resolve(process.cwd(), '../../.env') });
-config({ path: resolve(process.cwd(), '../../.env.local') });
+/** Monorepo root — stable regardless of process.cwd() when starting the server */
+export const monorepoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+
+config({ path: resolve(monorepoRoot, '.env') });
+config({ path: resolve(monorepoRoot, '.env.local') });
 
 export interface EnvConfig {
   nodeEnv: string;
@@ -45,7 +49,8 @@ function parseApiKeys(raw: string | undefined): string[] {
 }
 
 export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
-  const databaseUrl = process.env.DATABASE_URL ?? 'file:../../data/shield.db';
+  const databaseUrl =
+    process.env.DATABASE_URL ?? `file:${resolve(monorepoRoot, 'data/shield.db')}`;
   const apiKeys = parseApiKeys(process.env.API_KEYS);
   const apiKeyRequired =
     process.env.API_KEY_REQUIRED === 'true' ||
@@ -61,11 +66,10 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     maxPromptLength: Number(process.env.MAX_PROMPT_LENGTH ?? 32000),
     rulesVersion: process.env.RULES_VERSION ?? '1.0.0',
     corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
-    rulesDir: process.env.RULES_DIR ?? resolve(process.cwd(), '../../rules'),
+    rulesDir: process.env.RULES_DIR ?? resolve(monorepoRoot, 'rules'),
     rateLimitWindowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60_000),
     rateLimitMax: Number(process.env.RATE_LIMIT_MAX ?? 100),
-    openapiPath:
-      process.env.OPENAPI_PATH ?? resolve(process.cwd(), '../../docs/openapi.yaml'),
+    openapiPath: process.env.OPENAPI_PATH ?? resolve(monorepoRoot, 'docs/openapi.yaml'),
     databaseUrl,
     apiKeys,
     apiKeyRequired,
@@ -75,7 +79,7 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     webhookMaxRetries: Number(process.env.WEBHOOK_MAX_RETRIES ?? 3),
     webhookTimeoutMs: Number(process.env.WEBHOOK_TIMEOUT_MS ?? 5000),
     webhookMaxSubscriptions: Number(process.env.WEBHOOK_MAX_SUBSCRIPTIONS ?? 20),
-    knowledgeDir: process.env.KNOWLEDGE_DIR ?? resolve(process.cwd(), '../../knowledge'),
+    knowledgeDir: process.env.KNOWLEDGE_DIR ?? resolve(monorepoRoot, 'knowledge'),
     ruleSuggestionsEnabled: process.env.RULE_SUGGESTIONS_ENABLED !== 'false',
     autoSuggestRules: process.env.AUTO_SUGGEST_RULES !== 'false',
     maxPendingSuggestions: Number(process.env.MAX_PENDING_SUGGESTIONS ?? 100),
