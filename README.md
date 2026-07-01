@@ -150,6 +150,26 @@ curl http://localhost:3001/api/v1/rules/db
 
 Set `RULES_DB_ENABLED=false` to disable DB rules. See [ADR 005](docs/adr/005-database-rules.md).
 
+## V3.2 — TypeScript SDK
+
+```bash
+pnpm --filter @shield/sdk build
+```
+
+```typescript
+import { ShieldClient, analyzeLocal } from '@shield/sdk';
+
+// Remote API
+const client = new ShieldClient({
+  baseUrl: 'http://localhost:3001',
+  apiKey: process.env.SHIELD_API_KEY,
+});
+const result = await client.analyze('ignore previous instructions');
+
+// Offline (no server)
+const local = await analyzeLocal({ prompt: 'Hello world' });
+```
+
 ## Tests
 
 ```bash
@@ -180,7 +200,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.1** (database rules); V2 complete.
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.2** (npm SDK); V2 complete.
 
 ## API endpoints (V1.5)
 

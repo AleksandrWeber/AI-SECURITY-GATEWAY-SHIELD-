@@ -1,0 +1,32 @@
+{
+  "name": "@shield/sdk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SHIELD TypeScript SDK — remote API client and local offline analysis",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@shield/ai-core": "workspace:*",
+    "@shield/rule-engine": "workspace:*",
+    "@shield/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  }
+}

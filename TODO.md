@@ -170,9 +170,15 @@ See MASTER_PROMPT.md roadmap section.
 - [x] `POST /api/v1/knowledge/pending/:id/promote` + `approve` with `promoteToDb`
 - [x] ADR 005 + integration tests
 
-### V3.2+ (pending)
+### V3.2 — npm SDK (`@shield/sdk`) ✅
 
-- [ ] npm SDK (`@shield/sdk`)
+- [x] `ShieldClient` — typed HTTP wrapper for SHIELD API
+- [x] `analyzeLocal` — offline analysis (rule engine + mock AI)
+- [x] `ShieldApiError`, re-exports from `@shield/types`
+- [x] Unit tests (mock fetch + local analyze)
+
+### V3.3+ (pending)
+
 - [ ] MCP server integration
 - [ ] GitHub Action
 - [ ] VS Code extension
