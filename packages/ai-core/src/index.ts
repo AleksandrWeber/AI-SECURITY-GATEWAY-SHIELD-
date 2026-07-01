@@ -61,9 +61,11 @@ export function buildCacheKey(
   normalizedPrompt: string,
   model: string,
   rulesVersion: string,
+  rulesFingerprint?: string | number,
 ): string {
+  const fingerprint = rulesFingerprint ?? rulesVersion;
   return createHash('sha256')
-    .update(`${normalizedPrompt}|${model}|${rulesVersion}`)
+    .update(`${normalizedPrompt}|${model}|${rulesVersion}|${fingerprint}`)
     .digest('hex');
 }
 

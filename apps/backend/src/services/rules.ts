@@ -6,6 +6,10 @@ import { isRulesDbEnabled, loadEnabledDbRules } from './db-rules.js';
 let rulesCache: Rule[] | null = null;
 let fileRulesCount = 0;
 
+function shouldReloadRulesEachRequest(): boolean {
+  return env.nodeEnv === 'development' || env.nodeEnv === 'test';
+}
+
 function mergeRules(fileRules: Rule[], dbRules: Rule[]): Rule[] {
   const byId = new Map<string, Rule>();
   for (const rule of fileRules) {
@@ -22,12 +26,20 @@ export function mergeRulesForTest(fileRules: Rule[], dbRules: Rule[]): Rule[] {
   return mergeRules(fileRules, dbRules);
 }
 
+async function loadRules(): Promise<Rule[]> {
+  const fileRules = await loadRulesFromDirectory(env.rulesDir);
+  fileRulesCount = fileRules.length;
+  const dbRules = isRulesDbEnabled() ? await loadEnabledDbRules() : [];
+  return mergeRules(fileRules, dbRules);
+}
+
 export async function getRules(): Promise<Rule[]> {
+  if (shouldReloadRulesEachRequest()) {
+    return loadRules();
+  }
+
   if (!rulesCache) {
-    const fileRules = await loadRulesFromDirectory(env.rulesDir);
-    fileRulesCount = fileRules.length;
-    const dbRules = isRulesDbEnabled() ? await loadEnabledDbRules() : [];
-    rulesCache = mergeRules(fileRules, dbRules);
+    rulesCache = await loadRules();
   }
   return rulesCache;
 }

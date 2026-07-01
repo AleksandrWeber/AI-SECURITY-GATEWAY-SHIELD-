@@ -46,7 +46,7 @@ export async function analyzeLocal(options: LocalAnalyzeOptions): Promise<Analys
   }
 
   const normalized = normalizePrompt(options.prompt);
-  const cacheKey = buildCacheKey(normalized, mockProvider.name, rulesVersion);
+  const cacheKey = buildCacheKey(normalized, mockProvider.name, rulesVersion, rules.length);
 
   return analyzeWithAI(
     mockProvider,

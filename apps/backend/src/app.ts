@@ -23,6 +23,7 @@ import { webhooksRouter } from './routes/webhooks.js';
 import { resetAnalysisCaches } from './services/analyze.js';
 import { initKnowledgeFromEnv } from './services/knowledge.js';
 import { resetMetrics } from './services/metrics.js';
+import { getRules } from './services/rules.js';
 import { initWebhooksFromEnv } from './services/webhooks.js';
 
 export interface CreateAppOptions {
@@ -91,6 +92,7 @@ export async function createApp(options: CreateAppOptions = {}): Promise<Express
 export async function startServer() {
   await initDatabase(env.databaseUrl);
   const app = buildExpressApp(env, { skipRateLimit: false });
+  const rules = await getRules();
 
   const server = app.listen(env.port, () => {
     console.log(`SHIELD API listening on http://localhost:${env.port}`);
@@ -99,6 +101,7 @@ export async function startServer() {
     console.log(`  API key auth: ${env.apiKeyRequired ? 'required' : 'disabled'}`);
     console.log(`  Database: ${parseDatabaseUrl(env.databaseUrl).dialect}`);
     console.log(`  Rate limit: ${env.rateLimitMax} req / ${env.rateLimitWindowMs}ms`);
+    console.log(`  Rules: ${rules.length} loaded (version ${env.rulesVersion})`);
   });
 
   const shutdown = () => {

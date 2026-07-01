@@ -71,7 +71,7 @@ export async function runAnalysis(
       );
     } else {
       const normalized = normalizePrompt(prompt);
-      const cacheKey = buildCacheKey(normalized, mockProvider.name, env.rulesVersion);
+      const cacheKey = buildCacheKey(normalized, mockProvider.name, env.rulesVersion, rules.length);
 
       const merged = await analyzeWithAI(
         mockProvider,

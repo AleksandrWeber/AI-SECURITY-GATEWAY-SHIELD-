@@ -97,6 +97,14 @@ describe('shouldInvokeAI', () => {
   });
 });
 
+describe('buildCacheKey', () => {
+  it('changes when rules fingerprint changes', () => {
+    const base = buildCacheKey('test prompt', 'mock', '1.0.0');
+    const moreRules = buildCacheKey('test prompt', 'mock', '1.0.0', 85);
+    expect(base).not.toBe(moreRules);
+  });
+});
+
 describe('analyzeWithAI pipeline', () => {
   const provider = new MockAIProvider();
   const rule: Rule = {
