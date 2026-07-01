@@ -1,0 +1,94 @@
+{
+  "version": "1.0.0",
+  "category": "pii_exposure",
+  "rules": [
+    {
+      "id": "pi-001",
+      "name": "SSN pattern",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "confidenceBoost": 50,
+      "enabled": true
+    },
+    {
+      "id": "pi-002",
+      "name": "Credit card pattern",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "\\b(?:\\d{4}[- ]?){3}\\d{4}\\b",
+      "confidenceBoost": 45,
+      "enabled": true
+    },
+    {
+      "id": "pi-003",
+      "name": "Email in sensitive context",
+      "category": "pii_exposure",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "regex",
+      "pattern": "password.*@\\w+\\.\\w+",
+      "confidenceBoost": 35,
+      "enabled": true
+    },
+    {
+      "id": "pi-004",
+      "name": "OpenAI API key pattern",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "sk-[a-zA-Z0-9]{20,}",
+      "confidenceBoost": 48,
+      "enabled": true
+    },
+    {
+      "id": "pi-005",
+      "name": "AWS access key pattern",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "AKIA[0-9A-Z]{16}",
+      "confidenceBoost": 48,
+      "enabled": true
+    },
+    {
+      "id": "pi-006",
+      "name": "Bearer token leak",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "bearer\\s+[a-zA-Z0-9._-]{20,}",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "pi-007",
+      "name": "Passport number (UK)",
+      "category": "pii_exposure",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "номер паспорта[:\\s]+[a-z]{2}\\d{6}",
+      "confidenceBoost": 44,
+      "enabled": true
+    },
+    {
+      "id": "pi-008",
+      "name": "Private key header",
+      "category": "pii_exposure",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "-----begin private key-----",
+      "confidenceBoost": 50,
+      "enabled": true
+    }
+  ]
+}

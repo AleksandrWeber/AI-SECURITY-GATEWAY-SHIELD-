@@ -1,0 +1,27 @@
+{
+  "name": "@shield/action",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Action — scan repository files for LLM prompt security risks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node scripts/prepare-dist.mjs && esbuild src/main.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/glob": "^0.5.0",
+    "@shield/sdk": "workspace:*",
+    "@shield/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  }
+}

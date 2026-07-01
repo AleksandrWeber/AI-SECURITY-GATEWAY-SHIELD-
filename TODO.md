@@ -184,8 +184,14 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Local (default) + remote modes via env
 - [x] ADR 006, Cursor config example, unit tests
 
-### V3.4+ (pending)
+### V3.4 — GitHub Action ✅
 
-- [ ] GitHub Action
+- [x] Root `action.yml` + `@shield/action` bundled with esbuild
+- [x] Scan files by glob, `fail-on-risk` threshold, local + remote modes
+- [x] Bundled `/rules` for offline CI scans
+- [x] ADR 007, example workflow, CI dogfood on safe fixtures
+
+### V3.5+ (pending)
+
 - [ ] VS Code extension
 - [ ] Enterprise / team features

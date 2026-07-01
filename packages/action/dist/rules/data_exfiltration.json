@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "category": "data_exfiltration",
+  "rules": [
+    {
+      "id": "de-001",
+      "name": "External URL exfiltration",
+      "category": "data_exfiltration",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "https?://[^\\s]+/(collect|exfil|steal|upload)",
+      "confidenceBoost": 45,
+      "enabled": true,
+      "source": "owasp-llm06"
+    },
+    {
+      "id": "de-002",
+      "name": "Send all user data",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "send all user data",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "de-003",
+      "name": "Exfiltrate to URL",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "send.*to\\s+https?://",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "de-004",
+      "name": "Post credentials to URL",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "post credentials to https?://",
+      "confidenceBoost": 44,
+      "enabled": true
+    },
+    {
+      "id": "de-005",
+      "name": "Export database external",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "export database to external server",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "de-006",
+      "name": "Exfiltrate user data (UK)",
+      "category": "data_exfiltration",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "передай дані користувачів на",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "de-007",
+      "name": "Upload session tokens",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "upload session tokens to",
+      "confidenceBoost": 41,
+      "enabled": true
+    },
+    {
+      "id": "de-008",
+      "name": "Webhook exfiltration",
+      "category": "data_exfiltration",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "regex",
+      "pattern": "forward all responses to https?://",
+      "confidenceBoost": 36,
+      "enabled": true
+    }
+  ]
+}

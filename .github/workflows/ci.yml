@@ -28,3 +28,12 @@ jobs:
       - run: pnpm test:e2e
         env:
           CI: true
+
+      - name: Build SHIELD GitHub Action
+        run: pnpm --filter @shield/action build
+
+      - name: Dogfood action on safe fixtures
+        uses: ./
+        with:
+          paths: packages/action/fixtures/safe/**
+          fail-on-risk: SUSPICIOUS

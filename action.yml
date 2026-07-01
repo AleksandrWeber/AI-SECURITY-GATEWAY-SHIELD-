@@ -1,0 +1,58 @@
+name: 'SHIELD Prompt Security Scan'
+description: 'Scan repository files for prompt injection, jailbreaks, and other LLM security risks'
+author: 'Oleksandr Shvachko'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  paths:
+    description: 'Glob pattern of files to scan (relative to repository root)'
+    required: false
+    default: '**/*.{txt,md,prompt}'
+  mode:
+    description: 'Analysis mode: quick or detailed'
+    required: false
+    default: 'quick'
+  language:
+    description: 'Report language (en or uk)'
+    required: false
+    default: ''
+  fail-on-risk:
+    description: 'Fail the workflow when risk is SAFE, SUSPICIOUS, or MALICIOUS (inclusive threshold)'
+    required: false
+    default: 'SUSPICIOUS'
+  local:
+    description: 'Use bundled offline rules (default true unless api-url is set)'
+    required: false
+    default: 'true'
+  api-url:
+    description: 'SHIELD API base URL for remote analysis (enables DB rules and server-side AI)'
+    required: false
+    default: ''
+  api-key:
+    description: 'API key for remote SHIELD API'
+    required: false
+    default: ''
+  rules-dir:
+    description: 'Custom rules directory for local mode (defaults to bundled rules)'
+    required: false
+    default: ''
+  max-file-kb:
+    description: 'Skip files larger than this size in kilobytes'
+    required: false
+    default: '32'
+
+outputs:
+  scanned-count:
+    description: 'Number of files analyzed'
+  findings-count:
+    description: 'Number of files with non-SAFE risk'
+  failed-count:
+    description: 'Number of files that exceeded fail-on-risk threshold'
+  summary:
+    description: 'JSON summary of scan results'
+
+runs:
+  using: 'node20'
+  main: 'packages/action/dist/index.js'

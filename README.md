@@ -212,6 +212,25 @@ pnpm --filter @shield/mcp build
 
 Tools: `shield_analyze`, `shield_batch_analyze`, `shield_status`. See [ADR 006](docs/adr/006-mcp-server.md) and [docs/mcp-cursor.example.json](docs/mcp-cursor.example.json).
 
+## V3.4 — GitHub Action
+
+Scan prompt files in CI before they reach production:
+
+```yaml
+- uses: actions/checkout@v4
+
+- uses: AleksandrWeber/AI-SECURITY-GATEWAY-SHIELD-@main
+  with:
+    paths: |
+      prompts/**
+      **/*.prompt
+    fail-on-risk: SUSPICIOUS
+```
+
+Build locally: `pnpm --filter @shield/action build` (bundles rules into `packages/action/dist/`).
+
+Remote mode: set `api-url` + `api-key` and `local: false`. See [ADR 007](docs/adr/007-github-action.md) and [docs/github-action.example.yml](docs/github-action.example.yml).
+
 ## Tests
 
 ```bash
@@ -242,7 +261,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.3** (MCP server); V2 complete.
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.4** (GitHub Action); V2 complete.
 
 ## API endpoints (V1.5)
 

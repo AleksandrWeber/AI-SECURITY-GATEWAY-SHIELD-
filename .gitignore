@@ -3,6 +3,8 @@ node_modules
 
 # Build
 dist
+!packages/action/dist/
+!packages/action/dist/**
 dist-ssr
 *.tsbuildinfo
 

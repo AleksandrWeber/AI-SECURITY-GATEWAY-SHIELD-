@@ -1,0 +1,96 @@
+{
+  "version": "1.0.0",
+  "category": "jailbreak",
+  "rules": [
+    {
+      "id": "jb-001",
+      "name": "DAN jailbreak",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "act as dan",
+      "confidenceBoost": 40,
+      "enabled": true,
+      "source": "community",
+      "tags": ["classic", "roleplay"]
+    },
+    {
+      "id": "jb-002",
+      "name": "Do anything now",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "\\bdan\\b.*without restrictions",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "jb-003",
+      "name": "Jailbreak keyword",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "jailbreak",
+      "confidenceBoost": 30,
+      "enabled": true
+    },
+    {
+      "id": "jb-004",
+      "name": "Developer mode unlock",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "developer mode enabled",
+      "confidenceBoost": 38,
+      "enabled": true
+    },
+    {
+      "id": "jb-005",
+      "name": "Unrestricted AI simulation",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "unrestricted ai",
+      "confidenceBoost": 38,
+      "enabled": true
+    },
+    {
+      "id": "jb-006",
+      "name": "Bypass safety filters",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "bypass safety filters",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "jb-007",
+      "name": "Unrestricted mode (UK)",
+      "category": "jailbreak",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "режим без обмежень",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "jb-008",
+      "name": "Do anything now phrase",
+      "category": "jailbreak",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "do anything now",
+      "confidenceBoost": 32,
+      "enabled": true
+    }
+  ]
+}

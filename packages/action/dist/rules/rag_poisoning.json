@@ -1,0 +1,99 @@
+{
+  "version": "1.0.0",
+  "category": "rag_poisoning",
+  "rules": [
+    {
+      "id": "rg-001",
+      "name": "Poison knowledge base",
+      "category": "rag_poisoning",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "poison the knowledge base",
+      "confidenceBoost": 44,
+      "enabled": true,
+      "source": "owasp",
+      "educationalNote": {
+        "en": "RAG poisoning inserts malicious documents so retrieval returns attacker-controlled context.",
+        "uk": "RAG poisoning вставляє шкідливі документи, щоб retrieval повертав контекст атакуючого."
+      }
+    },
+    {
+      "id": "rg-002",
+      "name": "Inject malicious RAG documents",
+      "category": "rag_poisoning",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "inject malicious documents into rag",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "rg-003",
+      "name": "Corrupt retrieval index",
+      "category": "rag_poisoning",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "corrupt retrieval index",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "rg-004",
+      "name": "False facts in vector store",
+      "category": "rag_poisoning",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "add false facts to the vector store",
+      "confidenceBoost": 38,
+      "enabled": true
+    },
+    {
+      "id": "rg-005",
+      "name": "Manipulate retrieved context",
+      "category": "rag_poisoning",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "manipulate retrieved context",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "rg-006",
+      "name": "Poison knowledge base (UK)",
+      "category": "rag_poisoning",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "отруї базу знань",
+      "confidenceBoost": 44,
+      "enabled": true
+    },
+    {
+      "id": "rg-007",
+      "name": "Malicious RAG injection (UK)",
+      "category": "rag_poisoning",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "ін'єкція шкідливих документів у rag",
+      "confidenceBoost": 42,
+      "enabled": true
+    },
+    {
+      "id": "rg-008",
+      "name": "Replace retrieved context (UK)",
+      "category": "rag_poisoning",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "підміни retrieved context",
+      "confidenceBoost": 40,
+      "enabled": true
+    }
+  ]
+}

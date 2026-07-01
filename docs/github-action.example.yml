@@ -1,0 +1,31 @@
+# Example workflow — copy into your repository as .github/workflows/shield.yml
+
+name: SHIELD Prompt Scan
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scan-prompts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan prompt files
+        uses: AleksandrWeber/AI-SECURITY-GATEWAY-SHIELD-@main
+        with:
+          paths: |
+            prompts/**
+            **/*.prompt
+            **/*.md
+          fail-on-risk: SUSPICIOUS
+
+      # Remote mode (optional) — uses running SHIELD API + database rules
+      # - uses: AleksandrWeber/AI-SECURITY-GATEWAY-SHIELD-@main
+      #   with:
+      #     paths: 'prompts/**'
+      #     local: 'false'
+      #     api-url: ${{ secrets.SHIELD_API_URL }}
+      #     api-key: ${{ secrets.SHIELD_API_KEY }}

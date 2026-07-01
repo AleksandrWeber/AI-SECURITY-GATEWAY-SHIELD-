@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "category": "tool_abuse",
+  "rules": [
+    {
+      "id": "ta-001",
+      "name": "Execute shell command",
+      "category": "tool_abuse",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "regex",
+      "pattern": "(run|execute)\\s+(shell|bash|cmd|powershell)",
+      "confidenceBoost": 40,
+      "enabled": true,
+      "source": "owasp-llm05"
+    },
+    {
+      "id": "ta-002",
+      "name": "Delete all files",
+      "category": "tool_abuse",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "delete all files",
+      "confidenceBoost": 45,
+      "enabled": true
+    },
+    {
+      "id": "ta-003",
+      "name": "Tool abuse (UK)",
+      "category": "tool_abuse",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "виконай shell команду",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ta-004",
+      "name": "Recursive delete root",
+      "category": "tool_abuse",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "rm -rf /",
+      "confidenceBoost": 48,
+      "enabled": true
+    },
+    {
+      "id": "ta-005",
+      "name": "SQL drop table",
+      "category": "tool_abuse",
+      "language": ["universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "drop table users",
+      "confidenceBoost": 44,
+      "enabled": true
+    },
+    {
+      "id": "ta-006",
+      "name": "Install malware",
+      "category": "tool_abuse",
+      "language": ["en", "universal"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "install malware",
+      "confidenceBoost": 45,
+      "enabled": true
+    },
+    {
+      "id": "ta-007",
+      "name": "Run PowerShell script (UK)",
+      "category": "tool_abuse",
+      "language": ["uk"],
+      "severity": "HIGH",
+      "type": "contains",
+      "pattern": "запусти powershell скрипт",
+      "confidenceBoost": 40,
+      "enabled": true
+    },
+    {
+      "id": "ta-008",
+      "name": "Disable security controls",
+      "category": "tool_abuse",
+      "language": ["en", "universal"],
+      "severity": "MEDIUM",
+      "type": "contains",
+      "pattern": "disable security controls",
+      "confidenceBoost": 36,
+      "enabled": true
+    }
+  ]
+}
