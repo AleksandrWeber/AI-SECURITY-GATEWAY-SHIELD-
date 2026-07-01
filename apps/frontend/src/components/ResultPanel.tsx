@@ -15,6 +15,8 @@ interface Props {
   feedbackSent?: boolean;
   onToggleFavorite?: () => void;
   onReportFalsePositive?: () => void;
+  onExportPdf?: () => void;
+  exportingPdf?: boolean;
 }
 
 export function ResultPanel({
@@ -24,6 +26,8 @@ export function ResultPanel({
   feedbackSent,
   onToggleFavorite,
   onReportFalsePositive,
+  onExportPdf,
+  exportingPdf,
 }: Props) {
   const explanation = tr.localize(result.explanation);
   const educationalNote = tr.localize(result.educationalNote);
@@ -43,6 +47,17 @@ export function ResultPanel({
           {tr.risk(result.risk)}
         </span>
         <div className="ml-auto flex flex-wrap gap-2">
+          {onExportPdf && (
+            <button
+              type="button"
+              data-testid="export-pdf"
+              disabled={exportingPdf}
+              onClick={onExportPdf}
+              className="rounded-md border border-slate-700 px-2.5 py-1 text-xs text-slate-300 hover:border-sky-600 disabled:opacity-50"
+            >
+              {exportingPdf ? tr.t('result.exportingPdf') : tr.t('result.exportPdf')}
+            </button>
+          )}
           {onToggleFavorite && (
             <button
               type="button"

@@ -1,8 +1,16 @@
-import type { AnalysisHistoryItem, AnalysisResult, SupportedLanguage, SystemStatus } from '@shield/types';
+import type {
+  AnalysisHistoryItem,
+  AnalysisResult,
+  AnalyticsSnapshot,
+  SupportedLanguage,
+  SystemStatus,
+} from '@shield/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   addFavorite,
   analyzePrompt,
+  downloadAnalysisPdf,
+  fetchAnalytics,
   fetchFavorites,
   fetchHistory,
   fetchMetrics,
@@ -32,7 +40,9 @@ export default function App() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [metrics, setMetrics] = useState<Awaited<ReturnType<typeof fetchMetrics>> | null>(null);
   const [status, setStatus] = useState<SystemStatus | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsSnapshot | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const [feedbackSentIds, setFeedbackSentIds] = useState<Set<string>>(new Set());
 
   const tr = useMemo(() => createTranslator(language), [language]);
@@ -57,9 +67,12 @@ export default function App() {
   const loadStatus = useCallback(async () => {
     setStatusLoading(true);
     try {
-      setStatus(await fetchStatus());
+      const [statusData, analyticsData] = await Promise.all([fetchStatus(), fetchAnalytics()]);
+      setStatus(statusData);
+      setAnalytics(analyticsData);
     } catch {
       setStatus(null);
+      setAnalytics(null);
     } finally {
       setStatusLoading(false);
     }
@@ -111,6 +124,17 @@ export default function App() {
       }
     } catch {
       // ignore
+    }
+  }
+
+  async function handleExportPdf(analysisId: string) {
+    setExportingPdf(true);
+    try {
+      await downloadAnalysisPdf(analysisId, language);
+    } catch {
+      // ignore
+    } finally {
+      setExportingPdf(false);
     }
   }
 
@@ -171,7 +195,7 @@ export default function App() {
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         {page === 'status' ? (
-          <StatusPage status={status} loading={statusLoading} tr={tr} />
+          <StatusPage status={status} analytics={analytics} loading={statusLoading} tr={tr} />
         ) : (
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
@@ -233,6 +257,8 @@ export default function App() {
                   feedbackSent={feedbackSentIds.has(result.analysisId)}
                   onToggleFavorite={() => handleToggleFavorite(result.analysisId)}
                   onReportFalsePositive={() => handleReportFalsePositive(result.analysisId)}
+                  onExportPdf={() => handleExportPdf(result.analysisId)}
+                  exportingPdf={exportingPdf}
                 />
               )}
             </div>

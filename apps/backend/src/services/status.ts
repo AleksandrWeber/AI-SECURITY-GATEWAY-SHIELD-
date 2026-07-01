@@ -4,6 +4,7 @@ import { loadRulesFromDirectory } from '@shield/rule-engine';
 import type { EnvConfig } from '../config.js';
 import { useDb } from '../db/query.js';
 import { countFalsePositives } from './favorites.js';
+import { enrichMetricsWithSystem } from './analytics.js';
 import { getMetricsSnapshot } from './metrics.js';
 
 const serverStartedAt = Date.now();
@@ -32,7 +33,7 @@ export async function getSystemStatus(env: EnvConfig): Promise<SystemStatus> {
     rulesCount = 0;
   }
 
-  const metrics = getMetricsSnapshot();
+  const metrics = enrichMetricsWithSystem(getMetricsSnapshot());
   const falsePositiveCount = await countFalsePositives();
   const degraded = !databaseConnected || rulesCount === 0;
 

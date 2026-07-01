@@ -31,7 +31,9 @@
     "reportFalsePositive": "Повідомити про хибне спрацювання",
     "falsePositiveSent": "Звіт надіслано — дякуємо",
     "toggleFavorite": "Зберегти звіт",
-    "removeFavorite": "Прибрати з обраного"
+    "removeFavorite": "Прибрати з обраного",
+    "exportPdf": "Експорт PDF",
+    "exportingPdf": "Експорт…"
   },
   "risk": {
     "SAFE": "Безпечно",
@@ -64,7 +66,9 @@
     "requests": "Запити",
     "cacheHit": "Кеш",
     "aiUsage": "AI",
-    "errors": "Помилки"
+    "errors": "Помилки",
+    "memory": "Пам'ять",
+    "cpuLoad": "CPU load"
   },
   "status": {
     "title": "Статус системи",
@@ -87,6 +91,12 @@
     "metrics": "Метрики",
     "feedback": "Зворотний зв'язок",
     "falsePositives": "Звіти про хибні спрацювання",
+    "analytics": "Аналітика",
+    "analysesTotal": "Всього аналізів",
+    "riskBreakdown": "Розподіл ризику",
+    "memoryRss": "RSS пам'ять",
+    "heapUsed": "Heap used",
+    "cpuLoad1m": "CPU load (1m)",
     "state": {
       "ok": "Працює",
       "degraded": "Обмежено",

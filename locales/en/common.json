@@ -31,7 +31,9 @@
     "reportFalsePositive": "Report false positive",
     "falsePositiveSent": "Report submitted — thank you",
     "toggleFavorite": "Save to favorites",
-    "removeFavorite": "Remove favorite"
+    "removeFavorite": "Remove favorite",
+    "exportPdf": "Export PDF",
+    "exportingPdf": "Exporting…"
   },
   "risk": {
     "SAFE": "Safe",
@@ -64,7 +66,9 @@
     "requests": "Requests",
     "cacheHit": "Cache hit",
     "aiUsage": "AI usage",
-    "errors": "Errors"
+    "errors": "Errors",
+    "memory": "Memory",
+    "cpuLoad": "CPU load"
   },
   "status": {
     "title": "System status",
@@ -87,6 +91,12 @@
     "metrics": "Runtime metrics",
     "feedback": "Feedback",
     "falsePositives": "False positive reports",
+    "analytics": "Analytics",
+    "analysesTotal": "Total analyses",
+    "riskBreakdown": "Risk breakdown",
+    "memoryRss": "RSS memory",
+    "heapUsed": "Heap used",
+    "cpuLoad1m": "CPU load (1m)",
     "state": {
       "ok": "Operational",
       "degraded": "Degraded",

@@ -1,4 +1,5 @@
 import type { AnalysisResult } from '@shield/types';
+import { eq } from 'drizzle-orm';
 import { useDb } from '../db/query.js';
 import { hashPrompt, preparePromptForStorage, redactSecrets } from '../utils/privacy.js';
 
@@ -94,6 +95,19 @@ export async function writeAuditLog(
         : null,
       exception: params.exception ?? null,
     });
+  });
+}
+
+export async function getAnalysisById(id: string): Promise<AnalysisResult | null> {
+  return useDb(async ({ db, schema }) => {
+    const rows = await db
+      .select()
+      .from(schema.analyses)
+      .where(eq(schema.analyses.id, id))
+      .limit(1);
+
+    if (rows.length === 0) return null;
+    return JSON.parse(rows[0].resultJson) as AnalysisResult;
   });
 }
 

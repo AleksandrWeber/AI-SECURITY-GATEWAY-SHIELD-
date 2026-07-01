@@ -36,6 +36,12 @@ export function MetricsBar({ metrics, tr }: Props) {
         <span>
           {tr.t('metrics.errors')}: {pct(metrics.errorRate)}
         </span>
+        {metrics.system && (
+          <span>
+            {tr.t('metrics.memory')}: {metrics.system.memoryMb.heapUsed} MB · {tr.t('metrics.cpuLoad')}:{' '}
+            {metrics.system.cpuLoadAvg[0].toFixed(2)}
+          </span>
+        )}
       </div>
     </div>
   );

@@ -154,6 +154,14 @@ See MASTER_PROMPT.md roadmap section.
 - [x] JSON stdout, `--stdin`, `--fail-on-risk` for CI
 - [x] Unit tests
 
-### V2.7+ (pending)
+### V2.7 — PDF export + analytics ✅
 
-- [ ] PDF export + analytics
+- [x] `GET /api/v1/analyze/:id/export.pdf` and `POST /api/v1/analyze/export.pdf`
+- [x] `GET /api/v1/analytics` — risk/action breakdown + system resources
+- [x] Extended `/metrics` with memory and CPU load
+- [x] Playground PDF export button + analytics on status page
+- [x] Integration tests
+
+### V3+ (pending)
+
+- Self-learning KB, MCP, SDK, enterprise features (see MASTER_PROMPT.md)

@@ -1,6 +1,7 @@
 import type {
   AnalysisHistoryItem,
   AnalysisResult,
+  AnalyticsSnapshot,
   FavoriteItem,
   FeedbackRecord,
   MetricsSnapshot,
@@ -42,6 +43,32 @@ export async function fetchMetrics(): Promise<MetricsSnapshot> {
     throw new Error(`HTTP ${res.status}`);
   }
   return res.json();
+}
+
+export async function fetchAnalytics(): Promise<AnalyticsSnapshot> {
+  const res = await fetch('/api/v1/analytics');
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function downloadAnalysisPdf(
+  analysisId: string,
+  language: SupportedLanguage,
+): Promise<void> {
+  const res = await fetch(`/api/v1/analyze/${analysisId}/export.pdf?language=${language}`);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `shield-report-${analysisId}.pdf`;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 export async function fetchStatus(): Promise<SystemStatus> {

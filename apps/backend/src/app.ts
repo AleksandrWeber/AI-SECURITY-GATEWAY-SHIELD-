@@ -6,8 +6,10 @@ import { initDatabase, parseDatabaseUrl, resetDatabase } from './db/index.js';
 import { createApiKeyMiddleware } from './middleware/apiKey.js';
 import { errorHandler, notFoundHandler } from './middleware/error.js';
 import { rateLimitFromEnv } from './middleware/rateLimit.js';
+import { analyticsRouter } from './routes/analytics.js';
 import { createAnalyzeRouter } from './routes/analyze.js';
 import { createDocsRouter } from './routes/docs.js';
+import { exportRouter } from './routes/export.js';
 import { favoritesRouter, feedbackRouter } from './routes/favorites.js';
 import { healthRouter } from './routes/health.js';
 import { historyRouter } from './routes/history.js';
@@ -42,6 +44,7 @@ function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express 
   app.use('/api/v1', createDocsRouter(appEnv));
   app.use('/api/v1', createStatusRouter(appEnv));
   app.use('/api/v1', metricsRouter);
+  app.use('/api/v1', analyticsRouter);
   app.use('/api/v1', historyRouter);
 
   const limitConfig = options.rateLimit ?? {
@@ -54,6 +57,7 @@ function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express 
     : rateLimitFromEnv(limitConfig);
 
   app.use('/api/v1/analyze', apiKey, analyzeMiddleware, createAnalyzeRouter(appEnv));
+  app.use('/api/v1', apiKey, exportRouter);
   app.use('/api/v1', apiKey, createKnowledgeRouter(appEnv));
   app.use('/api/v1', apiKey, webhooksRouter);
   app.use('/api/v1', apiKey, favoritesRouter);

@@ -193,6 +193,30 @@ export interface MetricsSnapshot {
     p99: number;
   };
   uptimeSeconds: number;
+  system?: SystemResources;
+}
+
+export interface SystemResources {
+  memoryMb: {
+    rss: number;
+    heapUsed: number;
+    heapTotal: number;
+    external: number;
+  };
+  cpuLoadAvg: [number, number, number];
+}
+
+export interface AnalysisAnalytics {
+  totalAnalyses: number;
+  byRisk: Record<Risk, number>;
+  byAction: Record<Action, number>;
+  topCategories: Array<{ category: DetectionCategory; count: number }>;
+}
+
+export interface AnalyticsSnapshot {
+  timestamp: string;
+  runtime: MetricsSnapshot;
+  analyses: AnalysisAnalytics;
 }
 
 export interface SystemStatus {

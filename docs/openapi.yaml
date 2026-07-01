@@ -375,6 +375,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/MetricsSnapshot'
 
+  /api/v1/analytics:
+    get:
+      summary: Extended analytics snapshot
+      tags: [System]
+      description: Runtime metrics with system resources plus stored analysis aggregates.
+      responses:
+        '200':
+          description: Analytics snapshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsSnapshot'
+
+  /api/v1/analyze/{id}/export.pdf:
+    get:
+      summary: Export stored analysis as PDF
+      tags: [Analysis]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: language
+          in: query
+          schema:
+            type: string
+            enum: [en, uk]
+      responses:
+        '200':
+          description: PDF report
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Analysis not found
+
+  /api/v1/analyze/export.pdf:
+    post:
+      summary: Export analysis JSON as PDF
+      tags: [Analysis]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisResult'
+      responses:
+        '200':
+          description: PDF report
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
 components:
   schemas:
     AnalyzeRequest:
@@ -622,6 +681,56 @@ components:
               type: number
         uptimeSeconds:
           type: integer
+        system:
+          $ref: '#/components/schemas/SystemResources'
+
+    SystemResources:
+      type: object
+      properties:
+        memoryMb:
+          type: object
+          properties:
+            rss:
+              type: number
+            heapUsed:
+              type: number
+            heapTotal:
+              type: number
+            external:
+              type: number
+        cpuLoadAvg:
+          type: array
+          items:
+            type: number
+          minItems: 3
+          maxItems: 3
+
+    AnalyticsSnapshot:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        runtime:
+          $ref: '#/components/schemas/MetricsSnapshot'
+        analyses:
+          type: object
+          properties:
+            totalAnalyses:
+              type: integer
+            byRisk:
+              type: object
+            byAction:
+              type: object
+            topCategories:
+              type: array
+              items:
+                type: object
+                properties:
+                  category:
+                    type: string
+                  count:
+                    type: integer
 
     WebhookEvent:
       type: string

@@ -120,6 +120,18 @@ Remote mode (backend must be running):
 pnpm exec shield analyze --remote --url http://localhost:3001 "test prompt"
 ```
 
+## PDF export & analytics (V2.7)
+
+```bash
+# Download PDF for a stored analysis
+curl -o report.pdf "http://localhost:3001/api/v1/analyze/<analysisId>/export.pdf?language=en"
+
+# Analytics snapshot (runtime + DB aggregates + system resources)
+curl http://localhost:3001/api/v1/analytics
+```
+
+The playground includes an **Export PDF** button on each result. The status page shows memory, CPU load, and risk breakdown.
+
 ## Tests
 
 ```bash
@@ -150,7 +162,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V2.6 complete** (V2.7 pending).
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V2 complete** (V2.7).
 
 ## API endpoints (V1.5)
 

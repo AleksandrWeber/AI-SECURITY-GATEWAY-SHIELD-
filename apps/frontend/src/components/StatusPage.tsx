@@ -1,8 +1,9 @@
-import type { SystemStatus } from '@shield/types';
+import type { AnalyticsSnapshot, SystemStatus } from '@shield/types';
 import type { Translator } from '../i18n';
 
 interface Props {
   status: SystemStatus | null;
+  analytics: AnalyticsSnapshot | null;
   loading: boolean;
   tr: Translator;
 }
@@ -13,7 +14,7 @@ function statusColor(status: SystemStatus['status']): string {
   return 'text-red-400';
 }
 
-export function StatusPage({ status, loading, tr }: Props) {
+export function StatusPage({ status, analytics, loading, tr }: Props) {
   if (loading || !status) {
     return (
       <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6" data-testid="status-page">
@@ -21,6 +22,8 @@ export function StatusPage({ status, loading, tr }: Props) {
       </div>
     );
   }
+
+  const system = analytics?.runtime.system ?? status.metrics.system;
 
   return (
     <div className="space-y-4" data-testid="status-page">
@@ -84,8 +87,36 @@ export function StatusPage({ status, loading, tr }: Props) {
           <span>
             {tr.t('metrics.aiUsage')}: {Math.round(status.metrics.aiUsageRate * 100)}%
           </span>
+          {system && (
+            <>
+              <span>
+                {tr.t('status.memoryRss')}: {system.memoryMb.rss} MB
+              </span>
+              <span>
+                {tr.t('status.heapUsed')}: {system.memoryMb.heapUsed} MB
+              </span>
+              <span>
+                {tr.t('status.cpuLoad1m')}: {system.cpuLoadAvg[0].toFixed(2)}
+              </span>
+            </>
+          )}
         </div>
       </section>
+
+      {analytics && (
+        <section className="rounded-xl border border-slate-800 bg-slate-900/50 p-6" data-testid="analytics-panel">
+          <h3 className="mb-3 text-sm font-medium text-slate-300">{tr.t('status.analytics')}</h3>
+          <p className="mb-2 text-sm text-slate-400">
+            {tr.t('status.analysesTotal')}: {analytics.analyses.totalAnalyses}
+          </p>
+          <p className="mb-2 text-xs text-slate-500">{tr.t('status.riskBreakdown')}</p>
+          <div className="flex flex-wrap gap-3 text-sm text-slate-400">
+            <span>{tr.risk('SAFE')}: {analytics.analyses.byRisk.SAFE}</span>
+            <span>{tr.risk('SUSPICIOUS')}: {analytics.analyses.byRisk.SUSPICIOUS}</span>
+            <span>{tr.risk('MALICIOUS')}: {analytics.analyses.byRisk.MALICIOUS}</span>
+          </div>
+        </section>
+      )}
 
       <section className="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
         <h3 className="mb-2 text-sm font-medium text-slate-300">{tr.t('status.feedback')}</h3>
