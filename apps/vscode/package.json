@@ -1,0 +1,133 @@
+{
+  "name": "shield-prompt-security",
+  "displayName": "SHIELD — AI Prompt Security",
+  "description": "Analyze prompts for injection, jailbreaks, and LLM security risks before they reach a model",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "shield",
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onCommand:shield.analyzeSelection",
+    "onCommand:shield.analyzeDocument"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "shield.analyzeSelection",
+        "title": "SHIELD: Analyze Selection",
+        "category": "SHIELD"
+      },
+      {
+        "command": "shield.analyzeDocument",
+        "title": "SHIELD: Analyze Document",
+        "category": "SHIELD"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "shield.analyzeSelection",
+          "when": "editorHasSelection",
+          "group": "shield@1"
+        },
+        {
+          "command": "shield.analyzeDocument",
+          "group": "shield@2"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "shield.analyzeSelection",
+        "key": "ctrl+shift+alt+s",
+        "mac": "cmd+shift+alt+s",
+        "when": "editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "SHIELD",
+      "properties": {
+        "shield.mode": {
+          "type": "string",
+          "enum": [
+            "local",
+            "remote"
+          ],
+          "default": "local",
+          "description": "Local offline rules or remote SHIELD API"
+        },
+        "shield.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:3001",
+          "description": "SHIELD API base URL for remote mode"
+        },
+        "shield.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for remote SHIELD API"
+        },
+        "shield.language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "uk"
+          ],
+          "default": "en",
+          "description": "Report language"
+        },
+        "shield.analysisMode": {
+          "type": "string",
+          "enum": [
+            "quick",
+            "detailed"
+          ],
+          "default": "quick",
+          "description": "Analysis depth"
+        },
+        "shield.rulesDir": {
+          "type": "string",
+          "default": "",
+          "description": "Custom rules directory for local mode (defaults to bundled rules)"
+        },
+        "shield.warnOnRisk": {
+          "type": "string",
+          "enum": [
+            "SAFE",
+            "SUSPICIOUS",
+            "MALICIOUS"
+          ],
+          "default": "SUSPICIOUS",
+          "description": "Show a warning notification when risk meets this threshold"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "package": "pnpm build && vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "@shield/sdk": "workspace:*",
+    "@shield/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  }
+}

@@ -231,6 +231,17 @@ Build locally: `pnpm --filter @shield/action build` (bundles rules into `package
 
 Remote mode: set `api-url` + `api-key` and `local: false`. See [ADR 007](docs/adr/007-github-action.md) and [docs/github-action.example.yml](docs/github-action.example.yml).
 
+## V3.5 — VS Code extension
+
+Analyze prompts directly in the editor:
+
+```bash
+pnpm --filter shield-prompt-security build
+pnpm --filter shield-prompt-security package   # produces .vsix
+```
+
+Commands: **SHIELD: Analyze Selection**, **SHIELD: Analyze Document**. Configure `shield.mode`, `shield.apiUrl`, and `shield.language` in VS Code settings. See [apps/vscode/README.md](apps/vscode/README.md) and [ADR 008](docs/adr/008-vscode-extension.md).
+
 ## Tests
 
 ```bash
@@ -261,7 +272,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.4** (GitHub Action); V2 complete.
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.5** (VS Code extension); V2 complete.
 
 ## API endpoints (V1.5)
 

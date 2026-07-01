@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "shield-vscode: build",
+      "type": "shell",
+      "command": "pnpm --filter shield-prompt-security build",
+      "options": {
+        "cwd": "${workspaceFolder}/../.."
+      },
+      "group": "build"
+    }
+  ]
+}

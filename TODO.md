@@ -191,7 +191,12 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Bundled `/rules` for offline CI scans
 - [x] ADR 007, example workflow, CI dogfood on safe fixtures
 
-### V3.5+ (pending)
+### V3.5 — VS Code extension ✅
 
-- [ ] VS Code extension
+- [x] `apps/vscode` — Analyze Selection / Analyze Document commands
+- [x] Webview result panel, `shield.*` settings, bundled local rules
+- [x] esbuild bundle, unit tests, ADR 008
+
+### V3.6+ (pending)
+
 - [ ] Enterprise / team features

@@ -37,3 +37,9 @@ jobs:
         with:
           paths: packages/action/fixtures/safe/**
           fail-on-risk: SUSPICIOUS
+
+      - name: Build VS Code extension
+        run: pnpm --filter shield-prompt-security build
+
+      - name: Test VS Code extension
+        run: pnpm --filter shield-prompt-security test
