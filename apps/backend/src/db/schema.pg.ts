@@ -80,3 +80,14 @@ export const webhookDeliveries = pgTable('webhook_deliveries', {
   createdAt: text('created_at').notNull(),
   deliveredAt: text('delivered_at'),
 });
+
+export const rules = pgTable('rules', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  ruleJson: text('rule_json').notNull(),
+  source: text('source').notNull(),
+  suggestionId: text('suggestion_id'),
+  enabled: boolean('enabled').notNull().default(true),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});

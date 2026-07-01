@@ -8,6 +8,7 @@ export const suggestRuleSchema = z.object({
 
 export const reviewSuggestionSchema = z.object({
   note: z.string().max(1000).optional(),
+  promoteToDb: z.boolean().optional(),
 });
 
 export const listPendingQuerySchema = z.object({

@@ -227,7 +227,7 @@ export interface SystemStatus {
   privacyMode: boolean;
   demoMode: boolean;
   database: { connected: boolean };
-  rules: { version: string; count: number };
+  rules: { version: string; count: number; fileCount: number; dbCount: number };
   aiProvider: { name: string; available: boolean };
   metrics: MetricsSnapshot;
   feedback: { falsePositiveCount: number };
@@ -299,4 +299,18 @@ export interface RuleSuggestion {
   createdAt: string;
   reviewedAt?: string;
   reviewNote?: string;
+  promotedToDbAt?: string;
+}
+
+export type DbRuleSource = 'promoted' | 'manual';
+
+export interface DbRuleRecord {
+  id: string;
+  category: DetectionCategory;
+  rule: Rule;
+  source: DbRuleSource;
+  suggestionId?: string;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

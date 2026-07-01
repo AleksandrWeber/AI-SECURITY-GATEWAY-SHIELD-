@@ -5,17 +5,19 @@ import {
   reviewSuggestionSchema,
   suggestRuleSchema,
 } from '../schemas/knowledge.js';
+import { promoteSuggestionToDb } from '../services/db-rules.js';
 import {
   createRuleSuggestion,
   getPendingSuggestion,
   listPendingSuggestions,
   reviewSuggestion,
 } from '../services/knowledge.js';
+import { reloadRules } from '../services/rules.js';
 import { detectPromptLanguage, resolveReportLanguage } from '../utils/language.js';
 
 type KnowledgeEnv = Pick<
   EnvConfig,
-  'ruleSuggestionsEnabled' | 'maxPromptLength'
+  'ruleSuggestionsEnabled' | 'maxPromptLength' | 'rulesDbEnabled'
 >;
 
 export function createKnowledgeRouter(env: KnowledgeEnv) {
@@ -133,7 +135,52 @@ export function createKnowledgeRouter(env: KnowledgeEnv) {
         return;
       }
 
-      res.json(reviewed);
+      let promoted = null;
+      if (body.promoteToDb) {
+        if (!env.rulesDbEnabled) {
+          res.status(503).json({ error: 'RULES_DB_DISABLED', message: 'Database rules are disabled' });
+          return;
+        }
+        promoted = await promoteSuggestionToDb(reviewed);
+        reloadRules();
+      }
+
+      res.json({ ...reviewed, promotedRule: promoted });
+    } catch (err) {
+      if (err instanceof Error && err.message === 'SUGGESTION_NOT_APPROVED') {
+        res.status(400).json({ error: 'SUGGESTION_NOT_APPROVED', message: 'Suggestion must be approved first' });
+        return;
+      }
+      next(err);
+    }
+  });
+
+  router.post('/knowledge/pending/:id/promote', async (req, res, next) => {
+    try {
+      if (!env.ruleSuggestionsEnabled) {
+        res.status(503).json({
+          error: 'SUGGESTIONS_DISABLED',
+          message: 'Rule suggestions are disabled',
+        });
+        return;
+      }
+      if (!env.rulesDbEnabled) {
+        res.status(503).json({ error: 'RULES_DB_DISABLED', message: 'Database rules are disabled' });
+        return;
+      }
+
+      const suggestion = await getPendingSuggestion(req.params.id);
+      if (!suggestion || suggestion.status !== 'approved') {
+        res.status(404).json({
+          error: 'NOT_FOUND',
+          message: 'Approved suggestion not found',
+        });
+        return;
+      }
+
+      const promoted = await promoteSuggestionToDb(suggestion);
+      reloadRules();
+      res.json({ suggestion, promotedRule: promoted });
     } catch (err) {
       next(err);
     }

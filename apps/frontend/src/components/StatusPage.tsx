@@ -56,7 +56,7 @@ export function StatusPage({ status, analytics, loading, tr }: Props) {
       <section className="rounded-xl border border-slate-800 bg-slate-900/50 p-6">
         <h3 className="mb-3 text-sm font-medium text-slate-300">{tr.t('status.rules')}</h3>
         <p className="text-sm text-slate-400">
-          v{status.rules.version} · {status.rules.count} {tr.t('status.rulesLoaded')}
+          v{status.rules.version} · {status.rules.count} {tr.t('status.rulesLoaded')} ({status.rules.fileCount} file · {status.rules.dbCount} db)
         </p>
       </section>
 

@@ -15,6 +15,7 @@ import { healthRouter } from './routes/health.js';
 import { historyRouter } from './routes/history.js';
 import { metricsRouter } from './routes/metrics.js';
 import { createKnowledgeRouter } from './routes/knowledge.js';
+import { createRulesRouter, initDbRulesFromEnv } from './routes/rules.js';
 import { createStatusRouter } from './routes/status.js';
 import { webhooksRouter } from './routes/webhooks.js';
 import { resetAnalysisCaches } from './services/analyze.js';
@@ -32,6 +33,7 @@ export interface CreateAppOptions {
 function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express {
   initWebhooksFromEnv(appEnv);
   initKnowledgeFromEnv(appEnv);
+  initDbRulesFromEnv(appEnv);
 
   const app = express();
   const apiKey = createApiKeyMiddleware(appEnv);
@@ -59,6 +61,7 @@ function buildExpressApp(appEnv: EnvConfig, options: CreateAppOptions): Express 
   app.use('/api/v1/analyze', apiKey, analyzeMiddleware, createAnalyzeRouter(appEnv));
   app.use('/api/v1', apiKey, exportRouter);
   app.use('/api/v1', apiKey, createKnowledgeRouter(appEnv));
+  app.use('/api/v1', apiKey, createRulesRouter(appEnv));
   app.use('/api/v1', apiKey, webhooksRouter);
   app.use('/api/v1', apiKey, favoritesRouter);
   app.use('/api/v1', apiKey, feedbackRouter);

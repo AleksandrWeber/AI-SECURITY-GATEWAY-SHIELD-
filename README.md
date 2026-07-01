@@ -132,6 +132,24 @@ curl http://localhost:3001/api/v1/analytics
 
 The playground includes an **Export PDF** button on each result. The status page shows memory, CPU load, and risk breakdown.
 
+## V3.1 — Database rules
+
+Approved AI suggestions can be promoted into the database and used at runtime (merged with `/rules` files; DB wins on ID conflict):
+
+```bash
+# Approve then promote
+curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/approve -d '{"note":"ok"}'
+curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/promote
+
+# Or approve + promote in one step
+curl -X POST http://localhost:3001/api/v1/knowledge/pending/<id>/approve -d '{"promoteToDb":true}'
+
+# List database rules
+curl http://localhost:3001/api/v1/rules/db
+```
+
+Set `RULES_DB_ENABLED=false` to disable DB rules. See [ADR 005](docs/adr/005-database-rules.md).
+
 ## Tests
 
 ```bash
@@ -162,7 +180,7 @@ docs/             ADRs and API docs
 
 ## Development phases
 
-See [TODO.md](./TODO.md) for the full roadmap. Current status: **V2 complete** (V2.7).
+See [TODO.md](./TODO.md) for the full roadmap. Current status: **V3.1** (database rules); V2 complete.
 
 ## API endpoints (V1.5)
 

@@ -80,3 +80,14 @@ export const webhookDeliveries = sqliteTable('webhook_deliveries', {
   createdAt: text('created_at').notNull(),
   deliveredAt: text('delivered_at'),
 });
+
+export const rules = sqliteTable('rules', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  ruleJson: text('rule_json').notNull(),
+  source: text('source').notNull(),
+  suggestionId: text('suggestion_id'),
+  enabled: integer('enabled', { mode: 'boolean' }).notNull().default(true),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});

@@ -31,6 +31,7 @@ export interface EnvConfig {
   ruleSuggestionsEnabled: boolean;
   autoSuggestRules: boolean;
   maxPendingSuggestions: number;
+  rulesDbEnabled: boolean;
 }
 
 function parseApiKeys(raw: string | undefined): string[] {
@@ -76,6 +77,7 @@ export function loadEnv(overrides: Partial<EnvConfig> = {}): EnvConfig {
     ruleSuggestionsEnabled: process.env.RULE_SUGGESTIONS_ENABLED !== 'false',
     autoSuggestRules: process.env.AUTO_SUGGEST_RULES !== 'false',
     maxPendingSuggestions: Number(process.env.MAX_PENDING_SUGGESTIONS ?? 100),
+    rulesDbEnabled: process.env.RULES_DB_ENABLED !== 'false',
     ...overrides,
   };
 }

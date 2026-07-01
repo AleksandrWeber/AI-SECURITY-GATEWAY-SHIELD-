@@ -162,6 +162,18 @@ See MASTER_PROMPT.md roadmap section.
 - [x] Playground PDF export button + analytics on status page
 - [x] Integration tests
 
-### V3+ (pending)
+### V3.1 — Database rules (self-learning foundation) ✅
 
-- Self-learning KB, MCP, SDK, enterprise features (see MASTER_PROMPT.md)
+- [x] `rules` table (SQLite + PostgreSQL) + migrations `0003_rules`
+- [x] Merge file + DB rules at runtime (DB overrides on ID conflict)
+- [x] `GET/POST/PATCH/DELETE /api/v1/rules/db`
+- [x] `POST /api/v1/knowledge/pending/:id/promote` + `approve` with `promoteToDb`
+- [x] ADR 005 + integration tests
+
+### V3.2+ (pending)
+
+- [ ] npm SDK (`@shield/sdk`)
+- [ ] MCP server integration
+- [ ] GitHub Action
+- [ ] VS Code extension
+- [ ] Enterprise / team features
